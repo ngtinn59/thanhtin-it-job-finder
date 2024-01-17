@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('companies', function (Blueprint $table) {
             $table->id();
-            $table->integer('skill_id')->unsigned();
             $table->string('slug_title');
             $table->string('company_name');
+            $table->string('introduction');
+
             $table->string('address_work');
             $table->string('website_url');
             $table->timestamps();

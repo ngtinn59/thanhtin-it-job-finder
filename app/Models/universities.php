@@ -12,6 +12,6 @@ class universities extends Model
 
     public function educations()
     {
-        return $this->belongsTo(educations::class);
+        return $this->belongsTo(educations::class,'universities_id','id');
     }
 }

@@ -8,15 +8,18 @@ use Illuminate\Database\Eloquent\Model;
 class skills extends Model
 {
     use HasFactory;
+    protected $table = 'skills';
+    protected $primaryKey = 'id';
+    protected $guarded = [];
 
-    public function experience()
+    public function experiences()
     {
-        return $this->hasOne(experiences::class);
+        return $this->hasOne(experiences::class,'skills_id','id');
     }
 
     public function profiles()
     {
-        return $this->belongsTo(profiles::class);
+        return $this->belongsTo(profiles::class,'profiles_id','id');
     }
 
 

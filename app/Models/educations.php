@@ -16,11 +16,11 @@ class educations extends Model
 
     public function profiles()
     {
-        return $this->belongsTo(profiles::class);
+        return $this->belongsTo(profiles::class,'profiles_id','id');
     }
 
-    public function university()
+    public function universities()
     {
-        return $this->hasMany(universities::class);
+        return $this->hasMany(universities::class, 'universities_id','id');
     }
 }

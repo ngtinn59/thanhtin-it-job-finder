@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('educations', function (Blueprint $table) {
             $table->id();
             $table->integer('profile_id')->unsigned();
-            $table->integer('education_id')->unsigned();
+            $table->integer('universities_id')->unsigned();
             $table->date('start_date');
             $table->date('end_date');
             $table->boolean('is_graduate');

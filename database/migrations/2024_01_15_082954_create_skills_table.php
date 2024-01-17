@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('skills', function (Blueprint $table) {
             $table->id();
-            $table->integer('profile_id')->unsigned();
+            $table->integer('profiles_id')->unsigned();
             $table->string('slug_title');
             $table->string('skill_name');
             $table->string('skill_level');

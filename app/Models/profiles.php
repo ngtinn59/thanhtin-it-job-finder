@@ -8,36 +8,34 @@ use Illuminate\Database\Eloquent\Model;
 class profiles extends Model
 {
     use HasFactory;
+    protected $table = 'profiles';
+    protected $primaryKey = 'id';
+    protected $guarded = [];
 
 
     public function educations()
     {
-        return $this->hasMany(educations::class);
+        return $this->hasMany(educations::class,'profiles_id',  'id');
     }
 
     public function experiences()
     {
-        return $this->hasMany(experiences::class);
+        return $this->hasMany(experiences::class, 'profiles_id','id');
     }
 
     public function projects()
     {
-        return $this->hasMany(projects::class);
+        return $this->hasMany(projects::class,'profiles_id','id');
     }
 
     public function skills()
     {
-        return $this->hasMany(skills::class);
-    }
-
-    public function company()
-    {
-        return $this->hasMany(companies::class);
+        return $this->hasMany(skills::class,'profiles_id','id');
     }
 
 
-    public function User()
+    public function Users()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class,'users_id','id');
     }
 }

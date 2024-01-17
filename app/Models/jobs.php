@@ -8,9 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class jobs extends Model
 {
     use HasFactory;
-
-    public function experience()
+    protected $table = 'jobs';
+    protected $primaryKey = 'id';
+    protected $guarded = [];
+    public function experiences()
     {
-        return $this->hasOne(experiences::class);
+        return $this->hasOne(experiences::class,'jobs_id','id');
     }
 }

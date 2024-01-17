@@ -14,23 +14,23 @@ class experiences extends Model
     protected $primaryKey = 'id';
     protected $guarded = [];
 
-    public function profile()
+    public function profiles()
     {
-        return $this->belongsTo(profiles::class);
+        return $this->belongsTo(profiles::class,'profiles_id', 'id');
     }
 
-    public function company()
+    public function companies()
     {
-        return $this->hasOne(companies::class);
+        return $this->hasOne(companies::class,'companies','id');
     }
 
-    public function job()
+    public function jobs()
     {
-        return $this->hasOne(jobs::class);
+        return $this->hasOne(jobs::class,'jobs_id','id');
     }
 
-    public function skill()
+    public function skills()
     {
-        return $this->hasOne(skills::class);
+        return $this->hasOne(skills::class,'skills_id','id');
     }
 }

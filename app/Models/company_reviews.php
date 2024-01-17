@@ -13,13 +13,13 @@ class company_reviews extends Model
     protected $primaryKey = 'id';
     protected $guarded = [];
 
-    public function user()
+    public function users()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class,'users_id', 'id');
     }
 
-    public function company()
+    public function companies()
     {
-        return $this->belongsTo(companies::class);
+        return $this->belongsTo(companies::class, '');
     }
 }

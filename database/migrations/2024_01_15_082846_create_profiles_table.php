@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('profiles', function (Blueprint $table) {
             $table->id();
-            $table->integer('user_id')->unsigned();
+            $table->integer('users_id')->unsigned();
             $table->string('slug_title');
             $table->string('title');
             $table->string('image_url');
