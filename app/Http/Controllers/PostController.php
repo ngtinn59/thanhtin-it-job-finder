@@ -38,7 +38,7 @@ class PostController extends Controller
         $post = Post::find($id);
 
         if (!$post) {
-            return response()->json(['message' => 'Bài viết không tồn tại.'], 404);
+            return response()->json(['message' => 'The article does not exist..'], 404);
         }
 
         $post->update($request->all());
