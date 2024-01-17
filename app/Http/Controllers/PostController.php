@@ -30,7 +30,7 @@ class PostController extends Controller
     {
         $data = $request->all();
         $this->postService->create($data);
-        return response()->json(['message' => 'Bài viết đã được tạo thành công.'], 201);
+        return response()->json(['message' => 'Successs.'], 201);
     }
 
     public function update(Request $request, $id)

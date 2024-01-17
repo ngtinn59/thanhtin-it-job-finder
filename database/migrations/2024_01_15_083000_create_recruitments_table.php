@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('recruitments', function (Blueprint $table) {
             $table->id();
-            $table->integer('user_id')->unsigned();
-            $table->integer('company_id')->unsigned();
+            $table->integer('users_id')->unsigned();
+            $table->integer('companies_id')->unsigned();
 
             $table->string('title');
             $table->string('slug_title');

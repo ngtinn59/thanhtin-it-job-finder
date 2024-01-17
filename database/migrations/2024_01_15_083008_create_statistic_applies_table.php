@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('statistic_applies', function (Blueprint $table) {
             $table->id();
-            $table->integer('recruitment_id')->unsigned();
+            $table->integer('recruitments_id')->unsigned();
             $table->integer('application_count');
             $table->integer('browsing_count');
             $table->date('application_date');

@@ -14,10 +14,9 @@ return new class extends Migration
         Schema::create('company_reviews', function (Blueprint $table) {
             $table->id();
             $table->integer('user_id')->unsigned();
-            $table->integer('company_id')->unsigned();
+            $table->integer('companies_id')->unsigned();
             $table->integer('rating');
             $table->string('review_text');
-            $table->date('review_date');
 
             $table->timestamps();
         });

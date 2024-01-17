@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('experiences', function (Blueprint $table) {
             $table->id();
-            $table->integer('profile_id')->unsigned();
-            $table->integer('company_id')->unsigned();
-            $table->integer('skill_id')->unsigned();
+            $table->integer('profiles_id')->unsigned();
+            $table->integer('companies_id')->unsigned();
+            $table->integer('skills_id')->unsigned();
             $table->string('introduce');
             $table->date('start_date');
             $table->date('end_date');

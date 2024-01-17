@@ -18,27 +18,27 @@ class companies extends Model
 
     public function reviews()
     {
-        return $this->hasMany(company_reviews::class);
+        return $this->hasMany(company_reviews::class,'companies_id', 'id');
     }
 
-    public function experience()
+    public function experiences()
     {
-        return $this->hasOne(experiences::class);
+        return $this->hasOne(experiences::class, 'companies_id', 'id');
     }
 
     public function profiles()
     {
-        return $this->belongsTo(profiles::class);
+        return $this->belongsTo(profiles::class,'profiles_id','id');
     }
 
     public function recruitments()
     {
-        return $this->hasOne(statistic_applies::class);
+        return $this->hasOne(statistic_applies::class,'companies_id', 'id');
     }
 
     public function users()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'users_id', 'id');
     }
 
 }

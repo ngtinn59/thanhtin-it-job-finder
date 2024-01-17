@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class recruitments extends Model
 {
     use HasFactory;
+    protected $table = 'recruitments';
+    protected $primaryKey = 'id';
+    protected $guarded = [];
 
     protected $fillable = [
         'user_id',
@@ -31,11 +34,11 @@ class recruitments extends Model
     ];
     public function statistic_applies()
     {
-        return $this->hasMany(statistic_applies::class);
+        return $this->hasMany(statistic_applies::class,'recruitments_id','id');
     }
 
-    public function users()
+    public function Users()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class,'users_id','id');
     }
 }
