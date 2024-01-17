@@ -23,8 +23,18 @@ Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [AuthController::class, 'register']);
 Route::middleware('auth:sanctum')->group( function () {
     Route::get('me', [AuthController::class, 'me']);
+
 });
 
 Route::resource('posts', PostController::class);
-Route::post('/recruitments/create', [RecruitmentController::class, 'create']);
+Route::post('login', [AuthController::class, 'login']);
+Route::post('register', [AuthController::class, 'register']);
 
+Route::middleware('auth:sanctum')->group( function () {
+    Route::get('me', [AuthController::class, 'me']);
+    Route::post('logout', [AuthController::class, 'logout']);
+
+});
+
+Route::group(['middleware' => ['auth:sanctum']], function () {
+});

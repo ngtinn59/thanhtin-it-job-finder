@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Http\Requests\LoginRequest;
 use Illuminate\Http\Request;
 use Validator;
 use App\Models\User;
@@ -37,16 +38,18 @@ class AuthController extends Controller
         ]);
     }
 
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'email'    => 'required|string',
-            'password' => 'required|string',
-        ]);
+//        $validator = Validator::make($request->all(), [
+//            'email'    => 'required|string',
+//            'password' => 'required|string',
+//        ]);
 
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 400);
-        }
+//        if ($validator->fails()) {
+//            return response()->json(['error' => $validator->errors()], 400);
+//        }
+
+
 
         if(!Auth::attempt(['email' => $request->email, 'password' => $request->password])){
             return response()->json(['message' => 'Invalid login details'], 401);
@@ -61,6 +64,16 @@ class AuthController extends Controller
             'token_type'   => 'Bearer',
         ]);
     }
+
+
+    public function logout(Request $request) {
+            $request->user()->tokens()->delete();
+
+        return response()->json(['message' => 'Logout Sucess'], 200);
+    }
+
+
+
 
     public function me(Request $request)
     {
