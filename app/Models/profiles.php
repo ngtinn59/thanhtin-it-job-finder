@@ -13,6 +13,7 @@ class profiles extends Model
     protected $guarded = [];
 
 
+
     public function educations()
     {
         return $this->hasMany(educations::class,'profiles_id',  'id');

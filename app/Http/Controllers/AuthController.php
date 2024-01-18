@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 
 use App\Http\Requests\LoginRequest;
+use App\Models\educations;
+use App\Models\profiles;
 use Illuminate\Http\Request;
 use Validator;
 use App\Models\User;
@@ -27,6 +29,10 @@ class AuthController extends Controller
         $user = User::create([
             'name'     => $request->name,
             'email'    => $request->email,
+            'companies_id' => $request->companies_id,
+            'account_type' => $request->account_type,
+            'status' => $request->status,
+
             'password' => Hash::make($request->password),
         ]);
 
@@ -68,7 +74,6 @@ class AuthController extends Controller
 
     public function logout(Request $request) {
             $request->user()->tokens()->delete();
-
         return response()->json(['message' => 'Logout Sucess'], 200);
     }
 
@@ -77,6 +82,15 @@ class AuthController extends Controller
 
     public function me(Request $request)
     {
-        return $request->user();
+        $id = Auth::user()->getAuthIdentifier();
+        // Lấy thông tin hồ sơ cùng với giáo dục và dự án
+        $profiles = profiles::with(['educations', 'projects'])->get();
+
+
+
+        // Trả về thông tin
+        return response()->json(['profiles' => $profiles,
+        ]);
     }
+
 }

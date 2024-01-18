@@ -2,40 +2,10 @@
 
 namespace App\Providers;
 
-use App\Repositories\Blog\BlogRepository;
-use App\Repositories\Blog\BlogRepositoryInterface;
-use App\Repositories\Brand\BrandRepository;
-use App\Repositories\Brand\BrandRepositoryInterface;
-use App\Repositories\Order\OrderRepository;
-use App\Repositories\Order\OrderRepositoryInterface;
-use App\Repositories\OrderDetail\OrderDetailRepository;
-use App\Repositories\OrderDetail\OrderDetailRepositoryInterface;
-use App\Repositories\Post\PostRepository;
-use App\Repositories\Post\PostRepositoryInterface;
-use App\Repositories\Product\ProductRepository;
-use App\Repositories\Product\ProductRepositoryInterface;
-use App\Repositories\ProductCategory\ProductCategoryRepository;
-use App\Repositories\ProductCategory\ProductCategoryRepositoryInterface;
-use App\Repositories\ProductComment\ProductCommentRepository;
-use App\Repositories\ProductComment\ProductCommentRepositoryInterface;
-use App\Repositories\User\UserRepository;
-use App\Repositories\User\UserRepositoryInterface;
-use App\Services\Blog\BlogService;
-use App\Services\Blog\BlogServiceInterface;
-use App\Services\Brand\BrandService;
-use App\Services\Brand\BrandServiceInterface;
-use App\Services\Order\OrderService;
-use App\Services\Order\OrderServiceInterface;
-use App\Services\OrderDetail\OrderDetailService;
-use App\Services\OrderDetail\OrderDetailServiceInterface;
-use App\Services\Post\PostService;
-use App\Services\Post\PostServiceInterface;
-use App\Services\Product\ProductService;
-use App\Services\Product\ProductServiceInterface;
-use App\Services\ProductCategory\ProductCategoryService;
-use App\Services\ProductCategory\ProductCategoryServiceInterface;
-use App\Services\ProductComment\ProductCommentService;
-use App\Services\ProductComment\ProductCommentServiceInterface;
+use App\Repositories\Recruitments\RecruitmentsRepository;
+use App\Repositories\Recruitments\RecruitmentsRepositoryInterface;
+use App\Services\ProductCategory\RecruitmentsServiceInterface;
+use App\Services\Recruitments\RecruitmentsService;
 use App\Services\User\UserService;
 use App\Services\User\UserServiceInterface;
 use Illuminate\Support\ServiceProvider;
@@ -60,8 +30,8 @@ class AppServiceProvider extends ServiceProvider
 
         //ProductComment
         $this->app->singleton(
-            ProductCommentRepositoryInterface::class,
-            ProductCommentRepository::class
+            RecruitmentsRepositoryInterface::class,
+            RecruitmentsRepository::class
         );
 
         $this->app->singleton(
@@ -69,15 +39,15 @@ class AppServiceProvider extends ServiceProvider
             ProductCommentService::class
         );
 
-        //Blog
+        //Recruitments
         $this->app->singleton(
-            BlogRepositoryInterface::class,
-            BlogRepository::class
+            RecruitmentsRepositoryInterface::class,
+            RecruitmentsRepository::class
         );
 
         $this->app->singleton(
-            BlogServiceInterface::class,
-            BlogService::class
+            RecruitmentsServiceInterface::class,
+            RecruitmentsService::class
         );
 
         //ProductCategory
@@ -87,8 +57,8 @@ class AppServiceProvider extends ServiceProvider
         );
 
         $this->app->singleton(
-            ProductCategoryServiceInterface::class,
-            ProductCategoryService::class
+            RecruitmentsServiceInterface::class,
+            RecruitmentsService::class
         );
 
         //Brand
