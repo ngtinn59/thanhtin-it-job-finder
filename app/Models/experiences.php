@@ -21,7 +21,7 @@ class experiences extends Model
 
     public function companies()
     {
-        return $this->hasOne(companies::class,'companies','id');
+        return $this->belongsTo(companies::class,'companies_id','id');
     }
 
     public function jobs()

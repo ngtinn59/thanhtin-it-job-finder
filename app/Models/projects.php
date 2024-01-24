@@ -17,4 +17,10 @@ class projects extends Model
         return $this->belongsTo(profiles::class,'profiles_id','id');
     }
 
+
+    public function stacks(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(stacks::class, 'projects_id', 'id');
+    }
 }
+

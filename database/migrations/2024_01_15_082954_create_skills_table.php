@@ -13,12 +13,10 @@ return new class extends Migration
     {
         Schema::create('skills', function (Blueprint $table) {
             $table->id();
-            $table->integer('profiles_id')->unsigned();
-            $table->string('slug_title');
-            $table->string('skill_name');
-            $table->string('skill_level');
-            $table->string('description');
-
+            $table->unsignedBigInteger('profiles_id')->unsigned();
+            $table->string("name",70)->nullable();
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('profiles_id')->references('id')->on('profiles')->onDelete('cascade');
             $table->timestamps();
         });
     }

@@ -23,7 +23,7 @@ class companies extends Model
 
     public function experiences()
     {
-        return $this->hasOne(experiences::class, 'companies_id', 'id');
+        return $this->hasMany(experiences::class, 'companies_id', 'id');
     }
 
     public function profiles()

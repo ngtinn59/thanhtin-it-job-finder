@@ -10,10 +10,11 @@
         "laravel/framework": "^10.10",
         "laravel/passport": "^11.10",
         "laravel/sanctum": "^3.3",
-        "laravel/tinker": "^2.8"
+        "laravel/tinker": "^2.8",
+      "ext-cassandra": "*"
     },
     "require-dev": {
-        "fakerphp/faker": "^1.9.1",
+        "fakerphp/faker": "^1.23",
         "laravel/breeze": "^1.28",
         "laravel/pint": "^1.0",
         "laravel/sail": "^1.18",

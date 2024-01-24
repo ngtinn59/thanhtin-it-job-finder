@@ -1,38 +1,27 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
-use App\Models\educations;
-use App\Models\profiles;
-use Illuminate\Http\Request;
-use Validator;
+use App\Http\Requests\RegisterRequest;
 use App\Models\User;
+use App\Utillities\Constant;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Validator;
 
 class AuthController extends Controller
 {
-    public function register(Request $request)
+    public function register(RegisterRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name'     => 'required|string|max:255',
-            'email'    => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 400);
-        }
-
         $user = User::create([
             'name'     => $request->name,
             'email'    => $request->email,
-            'companies_id' => $request->companies_id,
-            'account_type' => $request->account_type,
-            'status' => $request->status,
-
+            'account_type' => Constant::user_level_developer,
+            'status' => Constant::user_status_active,
             'password' => Hash::make($request->password),
         ]);
 
@@ -40,7 +29,7 @@ class AuthController extends Controller
 
         return response()->json([
             'access_token' => $token,
-            'token_type'   => 'Bearer',
+            'token_type' => 'Bearer',
         ]);
     }
 
@@ -58,7 +47,7 @@ class AuthController extends Controller
 
 
         if(!Auth::attempt(['email' => $request->email, 'password' => $request->password])){
-            return response()->json(['message' => 'Invalid login details'], 401);
+            return response() ->json(['message' => 'Invalid login details'], 401);
         }
 
         $user  = User::where('email', $request['email'])->firstOrFail();
@@ -76,10 +65,4 @@ class AuthController extends Controller
             $request->user()->tokens()->delete();
         return response()->json(['message' => 'Logout Sucess'], 200);
     }
-
-
-
-
-
-
 }

@@ -16,7 +16,7 @@ class profiles extends Model
 
     public function educations()
     {
-        return $this->hasMany(educations::class,'profiles_id',  'id');
+        return $this->hasMany(educations::class);
     }
 
     public function experiences()

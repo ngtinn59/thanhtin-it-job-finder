@@ -13,14 +13,11 @@ return new class extends Migration
     {
         Schema::create('educations', function (Blueprint $table) {
             $table->id();
-            $table->integer('profiles_id')->unsigned();
-            $table->integer('universities_id')->unsigned();
-            $table->date('start_date');
-            $table->date('end_date');
-            $table->boolean('is_graduate');
-            $table->string('major');
-            $table->string('grade');
-
+            $table->string("institution",100)->nullable();
+            $table->string("degree",100)->nullable();
+            $table->string("date-range",30)->nullable();
+            $table->unsignedBigInteger('profiles_id');
+            $table->foreign('profiles_id')->references('id')->on('profiles')->onDelete('cascade');
             $table->timestamps();
         });
     }

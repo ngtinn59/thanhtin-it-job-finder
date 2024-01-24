@@ -13,16 +13,17 @@ return new class extends Migration
     {
         Schema::create('profiles', function (Blueprint $table) {
             $table->id();
-            $table->integer('users_id')->unsigned();
-            $table->string('slug_title');
-            $table->string('title');
-            $table->string('image_url');
-            $table->string('email');
-            $table->string('phone_number');
-            $table->boolean('gender');
-            $table->date('date_of_birth');
-            $table->string('address');
-            $table->string('introduction');
+            $table->unsignedBigInteger('users_id');
+
+            $table->string("name",100)->nullable();
+            $table->string("title",100)->nullable();
+            $table->text("about")->nullable();
+            $table->string("phone",20)->nullable();
+            $table->string("email",50)->nullable();
+            $table->string("portfolio_url",100)->nullable();
+            $table->string("github_url",100)->nullable();
+            $table->string("linkedin_url",100)->nullable();
+            $table->foreign('users_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }
