@@ -33,5 +33,5 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::resource('posts', PostController::class);
     Route::post('Profiles', [DeveloperController::class, 'Profiles']);
     Route::get('logout', [AuthController::class, 'logout']);
-    Route::get('me', [AuthController::class, 'me']);
+    Route::get('me', [DeveloperController::class, 'me']);
 });

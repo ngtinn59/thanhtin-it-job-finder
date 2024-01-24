@@ -80,17 +80,6 @@ class AuthController extends Controller
 
 
 
-    public function me(Request $request)
-    {
-        $id = Auth::user()->getAuthIdentifier();
-        // Lấy thông tin hồ sơ cùng với giáo dục và dự án
-        $profiles = profiles::with(['educations', 'projects'])->get();
 
-
-
-        // Trả về thông tin
-        return response()->json(['profiles' => $profiles,
-        ]);
-    }
 
 }
