@@ -1,18 +1,11 @@
 <?php
 
-use App\Http\Controllers\Api\RecruitmentsController;
-use App\Http\Controllers\Api\Resume\AuthController;
-use App\Http\Controllers\Api\Resume\EducationController;
-use App\Http\Controllers\Api\Resume\ExperiencesController;
-use App\Http\Controllers\Api\Resume\profilesController;
-use App\Http\Controllers\Api\Resume\ProjectController;
-use App\Http\Controllers\Api\Resume\ResponsibilitiesController;
-use App\Http\Controllers\Api\Resume\skillsController;
-use App\Http\Controllers\Api\Resume\StackController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Developer\DeveloperController;
-use App\Http\Controllers\EmployerController;
-use App\Http\Controllers\PostController;
+use App\Http\Controllers\RecruitmentController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PostController;
 
 
 /*
@@ -25,23 +18,24 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+
+
 Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [AuthController::class, 'register']);
 Route::middleware('auth:sanctum')->group( function () {
-    Route::apiResource('profiles', profilesController::class);
-    Route::get('logout', [AuthController::class, 'logout']);
-    Route::get('me', [DeveloperController::class, 'me']);
-
-    Route::prefix('profiles')->group(function () {
-        Route::apiResource('skills', skillsController::class);
-        Route::resource('experiences', ExperiencesController::class);
-        Route::resource('projects', ProjectController::class);
-        Route::resource('educations', EducationController::class);
-        Route::resource('stacks', StackController::class);
-        Route::resource('responsibilities', ResponsibilitiesController::class);
-    });
-
-    Route::apiResource('recruitments', RecruitmentsController::class);
+    Route::get('me', [AuthController::class, 'me']);
 });
 
-
+Route::post('login', [AuthController::class, 'login']);
+Route::post('register', [AuthController::class, 'register']);
+Route::middleware('auth:sanctum')->group( function () {
+<<<<<<<<< Temporary merge branch 1
+    Route::get('me', [AuthController::class, 'me']);
+=========
+    Route::resource('posts', PostController::class);
+    Route::resource('posts', PostController::class);
+    Route::post('Profiles', [DeveloperController::class, 'Profiles']);
+    Route::get('logout', [AuthController::class, 'logout']);
+    Route::get('me', [DeveloperController::class, 'me']);
+>>>>>>>>> Temporary merge branch 2
+});
