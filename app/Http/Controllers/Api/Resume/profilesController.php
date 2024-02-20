@@ -26,8 +26,7 @@ class profilesController extends Controller
 
     public function index(){
 
-        $user = profiles::where("id", 1)
-            ->with("educations")
+        $users = profiles::with("educations")
             ->with("skills")
             ->with(["experiences" => function ($query) {
                 $query->with("responsibilities");
@@ -37,7 +36,7 @@ class profilesController extends Controller
             }])
             ->get();
 
-        $userData = $user->map(function ($user) {
+        $userData = $users->map(function ($user) {
             return [
                 'name' => $user->name,
                 'title' => $user->title,
@@ -73,6 +72,7 @@ class profilesController extends Controller
         ]);
 
     }
+
 
     /**
      * Store a newly created resource in storage.

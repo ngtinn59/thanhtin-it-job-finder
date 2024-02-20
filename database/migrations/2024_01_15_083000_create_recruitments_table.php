@@ -13,26 +13,17 @@ return new class extends Migration
     {
         Schema::create('recruitments', function (Blueprint $table) {
             $table->id();
-            $table->integer('users_id')->unsigned();
-            $table->integer('companies_id')->unsigned();
-
+            $table->unsignedBigInteger('users_id')->unsigned();
+            $table->foreign('users_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('title');
-            $table->string('slug_title');
             $table->string('position');
-            $table->string('form_of_work');
-            $table->string('experience_level');
-            $table->string('skills_required');
-            $table->string('experience_details');
             $table->integer('quantity');
             $table->float('min_salary');
             $table->float('max_salary');
             $table->date('expiration_date');
             $table->string('address_work');
-            $table->string('job_description');
-            $table->string('job_requirements');
             $table->string('benefits');
-            $table->integer('recruitment_status');
-
+            $table->tinyInteger('recruitment_status')->default(0);
             $table->timestamps();
         });
     }

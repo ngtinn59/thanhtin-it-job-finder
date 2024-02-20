@@ -1,7 +1,12 @@
 <?php
 
-use App\Http\Controllers\Api\RecruitmentsController;
-use App\Http\Controllers\Api\Resume\AuthController;
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\Recruitments\experience_levelController;
+use App\Http\Controllers\Api\Recruitments\FormofworkController;
+use App\Http\Controllers\Api\Recruitments\job_descriptionController;
+use App\Http\Controllers\Api\Recruitments\job_requirementsController;
+use App\Http\Controllers\Api\Recruitments\RecruitmentsController;
+use App\Http\Controllers\Api\Recruitments\skills_requiredController;
 use App\Http\Controllers\Api\Resume\EducationController;
 use App\Http\Controllers\Api\Resume\ExperiencesController;
 use App\Http\Controllers\Api\Resume\profilesController;
@@ -9,9 +14,6 @@ use App\Http\Controllers\Api\Resume\ProjectController;
 use App\Http\Controllers\Api\Resume\ResponsibilitiesController;
 use App\Http\Controllers\Api\Resume\skillsController;
 use App\Http\Controllers\Api\Resume\StackController;
-use App\Http\Controllers\Developer\DeveloperController;
-use App\Http\Controllers\EmployerController;
-use App\Http\Controllers\PostController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -25,13 +27,13 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+
+
+
 Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [AuthController::class, 'register']);
 Route::middleware('auth:sanctum')->group( function () {
     Route::apiResource('profiles', profilesController::class);
-    Route::get('logout', [AuthController::class, 'logout']);
-    Route::get('me', [DeveloperController::class, 'me']);
-
     Route::prefix('profiles')->group(function () {
         Route::apiResource('skills', skillsController::class);
         Route::resource('experiences', ExperiencesController::class);
@@ -42,6 +44,11 @@ Route::middleware('auth:sanctum')->group( function () {
     });
 
     Route::apiResource('recruitments', RecruitmentsController::class);
+    Route::prefix('recruitments')->group(function () {
+        Route::apiResource('skills_recruitments', skills_requiredController::class);
+        Route::apiResource('experience_level', experience_levelController::class);
+        Route::apiResource('formofwork', FormofworkController::class);
+        Route::apiResource('job_description', job_descriptionController::class);
+        Route::apiResource('job_requirements', job_requirementsController::class);
+    });
 });
-
-

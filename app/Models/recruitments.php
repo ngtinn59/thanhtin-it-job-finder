@@ -23,4 +23,20 @@ class recruitments extends Model
     {
         return $this->belongsTo(User::class,'users_id','id');
     }
+
+    public function job_requirements(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(job_requirements::class);
+    }
+
+    public function form_of_work(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Formofwork::class);
+    }
+
+    public function Experience_level(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Experience_level::class);
+    }
+
 }
