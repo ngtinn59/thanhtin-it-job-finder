@@ -35,7 +35,7 @@ Route::post('register', [AuthController::class, 'register']);
 Route::middleware('auth:sanctum')->group( function () {
     Route::apiResource('profiles', profilesController::class);
     Route::prefix('profiles')->group(function () {
-        Route::apiResource('skills', skillsController::class);
+        Route::resource('skills', skillsController::class);
         Route::resource('experiences', ExperiencesController::class);
         Route::resource('projects', ProjectController::class);
         Route::resource('educations', EducationController::class);
