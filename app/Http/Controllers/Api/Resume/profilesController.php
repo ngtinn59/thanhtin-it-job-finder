@@ -25,7 +25,6 @@ class profilesController extends Controller
 //    }
 
     public function index(){
-
         $users = profiles::with("educations")
             ->with("skills")
             ->with(["experiences" => function ($query) {
@@ -35,7 +34,6 @@ class profilesController extends Controller
                 $query->with("stacks");
             }])
             ->get();
-
         $userData = $users->map(function ($user) {
             return [
                 'name' => $user->name,
@@ -70,7 +68,6 @@ class profilesController extends Controller
             'message'   => "success",
             "data" => $userData
         ]);
-
     }
 
 

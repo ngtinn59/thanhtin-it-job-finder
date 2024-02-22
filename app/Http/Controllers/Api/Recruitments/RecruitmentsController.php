@@ -51,7 +51,8 @@ class RecruitmentsController extends Controller
                     return [
                         'body' => $experience_level->name,
                     ];
-                })
+                }),
+
             ];
         });
 

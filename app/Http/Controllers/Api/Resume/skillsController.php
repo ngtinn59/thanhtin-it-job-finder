@@ -16,7 +16,7 @@ class skillsController extends Controller
      */
     public function index()
     {
-        $skills = skills::all();
+        $skills = skills::paginate(5);
         return (new skillsResourceCollection($skills))->response();
     }
     /**
@@ -61,7 +61,6 @@ class skillsController extends Controller
      */
     public function update(Request $request, skills $skills)
     {
-        dd($request->all());
         $skills->update($request->validate());
 
         return new skillsResource($skills);
