@@ -25,42 +25,41 @@ class profilesController extends Controller
 //    }
 
     public function index(){
-        $users = profiles::with(["educations", "skills", "projects.stacks"])->get();
+        $users = profiles::with("educations")
+            ->with("skills")
+            ->with(["experiences" => function ($query) {
+                $query->with("responsibilities");
+            }])
+            ->with(["projects" => function ($query) {
+                $query->with("stacks");
+            }])
+            ->get();
         $userData = $users->map(function ($user) {
             return [
+                'name' => $user->name,
                 'title' => $user->title,
-                'data' => [
-                    'name' => $user->name,
-                    'phone' => $user->phone,
-                    'email' => $user->email,
-                    'date_of_birth' => $user->date_of_birth,
-                    'gender' => $user->gender,
-                    'address' => $user->address,
-                    'portfolio_url' => $user->portfolio_url,
-                    'github_url' => $user->github_url,
-
-                    'skills' => $user->skills->pluck('name')->toArray(),
-                    'experiences' => $user->experiences->map(function ($experience) {
-                        return [
-                            'title' => $experience->title,
-                            'company' => $experience->company,
-                            'description' => $experience->description,
-                            'stat_date' => $experience->stat_date,
-                            'end_date' => $experience->end_date,
-                            'description' => $experience->description,
-                            'projects' => $experience->projects
-                        ];
-                    }),
-                    'projects' => $user->projects->map(function ($project) {
-                        return [
-                            'name' => $project->name,
-                            'url' => $project->url,
-                            'description' => $project->description,
-                            'repository' => $project->repository,
-                            'stacks' => $project->stacks->pluck('name')->toArray(),
-                        ];
-                    }),
-                ]
+                'about' => $user->about,
+                'phone' => $user->phone,
+                'email' => $user->email,
+                'education' => $user->education,
+                'skills' => $user->skills->pluck('name')->toArray(),
+                'experiences' => $user->experiences->map(function ($experience) {
+                    return [
+                        'title' => $experience->title,
+                        'company' => $experience->company,
+                        'date-range' => $experience->date_range,
+                        'responsibilities' => $experience->responsibilities->pluck('details')->toArray(),
+                    ];
+                }),
+                'projects' => $user->projects->map(function ($project) {
+                    return [
+                        'name' => $project->name,
+                        'url' => $project->url,
+                        'description' => $project->description,
+                        'repository' => $project->repository,
+                        'stacks' => $project->stacks->pluck('name')->toArray(),
+                    ];
+                }),
             ];
         });
 
@@ -71,6 +70,7 @@ class profilesController extends Controller
         ]);
     }
 
+
     /**
      * Store a newly created resource in storage.
      */
@@ -80,11 +80,9 @@ class profilesController extends Controller
            'users_id' => Auth::user()->getAuthIdentifier(),
            'name' => $request->name,
            'title' => $request->title,
+           'about' => $request->about,
            'phone' => $request->phone,
            'email' => Auth::user()->email,
-           'date_of_birth' => $request->date_of_birth,
-           'gender' => $request->true ? '1' : '0',
-           'address' => $request->address,
            'portfolio_url' => $request->portfolio_url,
            'github_url' => $request->github_url,
            'linkedin_url' => $request->linkedin_url,
