@@ -2,16 +2,15 @@
 
 namespace App\Http\Controllers\Api\Resume;
 
-use App\Http\Resources\UserResourceCollection;
 use App\Models\aboutme;
-use App\Models\Certificates;
 use App\Http\Controllers\Controller;
+use App\Models\educations;
 use App\Models\profiles;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class CertificatesController extends Controller
+class AboutmeController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -20,14 +19,10 @@ class CertificatesController extends Controller
     {
         $user = User::where("id", auth()->user()->id)->firstOrFail();
         $profiles = profiles::where("users_id", $user->id)->firstOrFail();
-        $Certificates = Certificates::where("profiles_id", $profiles->id)->get();
-        $CertificatesData = $Certificates->map(function ($Certificates) {
+        $aboutme = aboutme::where("profiles_id", $profiles->id)->get();
+        $aboutmeData = $aboutme->map(function ($aboutme) {
             return [
-                'title' => $Certificates->title,
-                'name' => $Certificates->name,
-                'url' => $Certificates->url,
-                'date' => $Certificates->date,
-                'link' => $Certificates->link
+                'description' => $aboutme->description,
             ];
         });
 
@@ -35,7 +30,7 @@ class CertificatesController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'success',
-            'data' => $CertificatesData
+            'data' => $aboutmeData
         ]);
     }
 
@@ -45,19 +40,13 @@ class CertificatesController extends Controller
     public function store(Request $request)
     {
         $data = [
-            'title' => $request->input('title'),
-            'profiles_id' => $request->input('profiles_id'),
-            'name' => $request->input('name'),
-            'date' => $request->input('date'),
-            'link' => $request->input('link')
+            'description' => $request->input('description'),
+            'profiles_id' => $request->input('profiles_id')
         ];
 
         $validator = Validator::make($data, [
-            'title' => 'required',
+            'description' => 'required',
             'profiles_id' => 'required',
-            'name' => 'required',
-            'date' => 'required',
-            'link' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -69,39 +58,34 @@ class CertificatesController extends Controller
         }
 
         $data = $validator->validated();
-        $Certificates = Certificates::create($data);
+        $aboutme = aboutme::create($data);
 
         return response()->json([
             'success'   => true,
             'message'   => "success",
-            "data" => $Certificates
+            "data" => $aboutme
         ]);
+
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Certificates $certificates)
+    public function show(aboutme $aboutme)
     {
-
+        //
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Certificates $certificates)
+    public function update(Request $request, aboutme $aboutme)
     {
         $data = [
-            'title' => $request->input('title'),
             'description' => $request->input('description'),
-            'profiles_id' => $request->input('profiles_id'),
-            'name' => $request->input('name'),
-            'date' => $request->input('date'),
-            'link' => $request->input('link')
         ];
-        dd($data);
         $validator = Validator::make($data, [
-
+            'description' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -114,20 +98,26 @@ class CertificatesController extends Controller
 
         $data = $validator->validated();
 
-        $certificates->update($data);
+        $aboutme->update($data);
 
         return response()->json([
             'success' => true,
-            'message' => 'Certificates updated successfully',
-            'data' => $certificates,
+            'message' => 'Education updated successfully',
+            'data' => $aboutme,
         ]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Certificates $certificates)
+    public function destroy(aboutme $aboutme)
     {
-        //
+        $aboutme->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'About me deleted successfully',
+        ]);
+
     }
 }

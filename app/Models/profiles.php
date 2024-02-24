@@ -39,4 +39,10 @@ class profiles extends Model
     {
         return $this->belongsTo(User::class,'users_id','id');
     }
+
+    public function responsibilities()
+    {
+        return $this->hasMany(responsibilities::class,'profiles_id','id');
+    }
+
 }

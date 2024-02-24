@@ -33,4 +33,5 @@ class experiences extends Model
     {
         return $this->hasOne(skills::class,'skills_id','id');
     }
+
 }

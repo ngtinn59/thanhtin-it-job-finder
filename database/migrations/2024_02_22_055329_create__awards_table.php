@@ -14,7 +14,10 @@ return new class extends Migration
         Schema::create('Awards', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('profiles_id');
+            $table->string("title",100);
             $table->string("name",100);
+            $table->string("date",100);
+            $table->string("description",100);
             $table->foreign('profiles_id')->references('id')->on('profiles')->onDelete('cascade');
             $table->timestamps();
         });

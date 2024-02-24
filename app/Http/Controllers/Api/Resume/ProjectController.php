@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Api\Resume;
 
 use App\Http\Controllers\Controller;
+use App\Models\aboutme;
+use App\Models\profiles;
 use App\Models\projects;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -14,7 +17,26 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        //
+        $user = User::where("id", auth()->user()->id)->firstOrFail();
+        $profiles = profiles::where("users_id", $user->id)->firstOrFail();
+        $projects = projects::where("profiles_id", $profiles->id)->get();
+        $projectsdata = $projects->map(function ($projects) {
+            return [
+                'name' => $projects->name,
+                'description' => $projects->description,
+                'url' => $projects->url,
+                'repository' => $projects->repository,
+                'stacks' => $projects->stacks->pluck('name')->toArray(),
+
+            ];
+        });
+
+        // Trả về danh sách giáo dục dưới dạng JSON
+        return response()->json([
+            'success' => true,
+            'message' => 'success',
+            'data' => $projectsdata
+        ]);
     }
 
     /**

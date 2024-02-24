@@ -14,7 +14,11 @@ return new class extends Migration
         Schema::create('Certificates', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('profiles_id');
-            $table->string("name",100);
+            $table->string('title');
+            $table->string("name");
+            $table->string("date",100);
+            $table->string("link");
+
             $table->foreign('profiles_id')->references('id')->on('profiles')->onDelete('cascade');
             $table->timestamps();
         });

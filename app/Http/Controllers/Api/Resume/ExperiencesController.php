@@ -23,12 +23,18 @@ class ExperiencesController extends Controller
      */
     public function store(Request $request)
     {
-        $input = $request->all();
+        $input = [
+            'title' => $request->input('title'),
+            'company' => $request->input('company'),
+            'stat_date' => $request->input('start_date'),
+            'end_date' => $request->input('end_date'),
+            'description' => $request->input('description'),
+            'profiles_id' => $request->input('profiles_id')
+        ];
 
         $validator = Validator::make($input, [
             'title' => 'required',
             'company' => 'required',
-            'date_range' => 'required',
         ]);
 
         if ($validator->fails()) {
