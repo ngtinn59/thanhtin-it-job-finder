@@ -81,6 +81,7 @@ class AboutmeController extends Controller
      */
     public function update(Request $request, aboutme $aboutme)
     {
+
         $data = [
             'description' => $request->input('description'),
         ];
@@ -102,7 +103,7 @@ class AboutmeController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Education updated successfully',
+            'message' => 'About me updated successfully',
             'data' => $aboutme,
         ]);
     }

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('profiles_id')->unsigned();
             $table->string("name",70)->nullable();
-            $table->unsignedBigInteger('user_id');
+            $table->integer("level",)->nullable()->comment('0-Beginner, 1-Intermediate, 2-Excellent');
             $table->foreign('profiles_id')->references('id')->on('profiles')->onDelete('cascade');
             $table->timestamps();
         });

@@ -7,10 +7,14 @@ use App\Http\Controllers\Api\Recruitments\job_descriptionController;
 use App\Http\Controllers\Api\Recruitments\job_requirementsController;
 use App\Http\Controllers\Api\Recruitments\RecruitmentsController;
 use App\Http\Controllers\Api\Recruitments\skills_requiredController;
+use App\Http\Controllers\Api\Resume\AboutmeController;
+use App\Http\Controllers\Api\Resume\AwardsController;
+use App\Http\Controllers\Api\Resume\CertificatesController;
 use App\Http\Controllers\Api\Resume\EducationController;
 use App\Http\Controllers\Api\Resume\ExperiencesController;
 use App\Http\Controllers\Api\Resume\profilesController;
 use App\Http\Controllers\Api\Resume\ProjectController;
+use App\Http\Controllers\Api\Resume\ProjectsController;
 use App\Http\Controllers\Api\Resume\ResponsibilitiesController;
 use App\Http\Controllers\Api\Resume\skillsController;
 use App\Http\Controllers\Api\Resume\StackController;
@@ -34,13 +38,25 @@ Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [AuthController::class, 'register']);
 Route::middleware('auth:sanctum')->group( function () {
     Route::apiResource('profiles', profilesController::class);
+    Route::apiResource('educations', EducationController::class);
+    Route::apiResource('skills', skillsController::class);
+    Route::resource('aboutme', AboutmeController::class);
+    Route::resource('certificates', CertificatesController::class);
+    Route::resource('awards', AwardsController::class);
+    Route::resource('projects', ProjectsController::class);
+
+    Route::apiResource('experiences', ExperiencesController::class);
+    Route::resource('stacks', StackController::class);
+    Route::apiResource('responsibilities', ResponsibilitiesController::class);
+
     Route::prefix('profiles')->group(function () {
-        Route::resource('skills', skillsController::class);
-        Route::resource('experiences', ExperiencesController::class);
         Route::resource('projects', ProjectController::class);
-        Route::resource('educations', EducationController::class);
-        Route::resource('stacks', StackController::class);
-        Route::resource('responsibilities', ResponsibilitiesController::class);
+
+        Route::prefix('projects')->group(function () {
+
+        });
+
+
     });
 
     Route::apiResource('recruitments', RecruitmentsController::class);

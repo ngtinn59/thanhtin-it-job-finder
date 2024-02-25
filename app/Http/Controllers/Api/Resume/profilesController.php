@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Api\Resume;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\ProfilesResource;
 use App\Models\profiles;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class profilesController extends Controller
 {
@@ -89,7 +89,6 @@ class profilesController extends Controller
        ];
 
        $profiles = profiles::create($data);
-       return new ProfilesResource($profiles);
     }
 
     /**
@@ -105,7 +104,29 @@ class profilesController extends Controller
      */
     public function update(Request $request, profiles $profiles)
     {
-        //
+        $data = [
+            'id' => $profiles->id,
+            'users_id' => Auth::user()->getAuthIdentifier(),
+            'name' => $request->name,
+            'title' => $request->title,
+            'phone' => $request->phone,
+            'email' => Auth::user()->email,
+            'date_of_birth' => $request->date_of_birth,
+            'gender' => $request->true ? '1' : '0',
+            'address' => $request->address,
+            'portfolio_url' => $request->portfolio_url,
+            'github_url' => $request->github_url,
+            'linkedin_url' => $request->linkedin_url,
+        ];
+
+        $profiles->update($data);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Education updated successfully',
+            'data' => $profiles,
+        ]);
+
     }
 
     /**
@@ -113,6 +134,7 @@ class profilesController extends Controller
      */
     public function destroy(profiles $profiles)
     {
-        //
+        $profiles->delete();
+
     }
 }

@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string("shcool_name",100)->nullable();
             $table->string("degree",100)->nullable();
-            $table->date("start-date",30)->nullable();
-            $table->date("end-date",30)->nullable();
+            $table->date("start_date",30)->nullable();
+            $table->date("end_date",30)->nullable();
             $table->boolean("studying")->nullable();
             $table->string('details',100)->nullable();
             $table->unsignedBigInteger('profiles_id');

@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers\Api\Resume;
 
-use App\Http\Controllers\Controller;
-use App\Http\Resources\skillsResource;
-use App\Http\Resources\skillsResourceCollection;
+use App\Models\aboutme;
 use App\Models\skills;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -16,16 +15,20 @@ class skillsController extends Controller
      */
     public function index()
     {
-        $skills = skills::paginate(5);
-        return (new skillsResourceCollection($skills))->response();
+        //
     }
+
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-        $input = $request->all();
-        $validator = Validator::make($input, [
+        $data = [
+            'name' => $request->input('name'),
+            'profiles_id' => $request->input('profiles_id')
+        ];
+
+        $validator = Validator::make($data, [
             'name' => 'required',
             'profiles_id' => 'required',
         ]);
@@ -38,8 +41,8 @@ class skillsController extends Controller
             ], 400);
         }
 
-        $input = $validator->validated();
-        $skills = skills::create($input);
+        $data = $validator->validated();
+        $skills = skills::create($data);
 
         return response()->json([
             'success'   => true,
@@ -51,9 +54,9 @@ class skillsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id){
-        $skills = skills::find($id);
-        return (new skillsResource($skills))->response();
+    public function show(skills $skills)
+    {
+        //
     }
 
     /**
@@ -61,10 +64,7 @@ class skillsController extends Controller
      */
     public function update(Request $request, skills $skills)
     {
-        $skills->update($request->validate());
-
-        return new skillsResource($skills);
-
+        dd($skills->id);
     }
 
     /**
@@ -72,8 +72,6 @@ class skillsController extends Controller
      */
     public function destroy(skills $skills)
     {
-        $skills->delete();
-
-        return response()->noContent();
+        //
     }
 }

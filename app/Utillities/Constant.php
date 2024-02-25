@@ -16,6 +16,8 @@ class Constant
     const user_level_employer = 2;
     const user_status_active = 3;
     const user_status_inactive = 4;
+    const start_date = 'start-date';
+    const end_date = 'start-date';
 
     public static $user_level = [
         self::user_level_host => 'host',
@@ -25,5 +27,11 @@ class Constant
         self::user_status_inactive => 'inactive',
     ];
 
+
+
+    public  static $dates = [
+        self::start_date => 'start-date',
+        self::end_date => 'end-date',
+    ];
 
 }
