@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\Api\Resume;
 
+use App\Models\aboutme;
 use App\Models\Award;
-use App\Http\Controllers\Controller;
 use App\Models\Certificate;
-use App\Models\educations;
+use App\Http\Controllers\Controller;
 use App\Models\profiles;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class AwardsController extends Controller
+class CertificatesController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -20,16 +20,10 @@ class AwardsController extends Controller
     {
         $user = User::where("id", auth()->user()->id)->firstOrFail();
         $profiles = profiles::where("users_id", $user->id)->firstOrFail();
-        $awards = Award::where("profiles_id", $profiles->id)->get();
-
-        $awardsData = $awards->map(function ($awards) {
+        $certificate = Certificate::where("profiles_id", $profiles->id)->get();
+        $certificateData = $certificate->map(function ($certificate) {
             return [
-                'id' => $awards->id,
-                'title' => $awards->title,
-                'name' => $awards->name,
-                'date' => $awards->date,
-                'description' => $awards->description,
-
+                'description' => $certificate->description,
             ];
         });
 
@@ -37,7 +31,7 @@ class AwardsController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'success',
-            'data' => $awardsData
+            'data' => $certificateData
         ]);
     }
 
@@ -55,7 +49,9 @@ class AwardsController extends Controller
             'profiles_id' =>$profiles,
             'name' => $request->input('name'),
             'date' => $request->input('date'),
-            'description' => $request->input('description')
+            'description' => $request->input('description'),
+            'link' => $request->input('link')
+
         ];
 
 
@@ -65,6 +61,7 @@ class AwardsController extends Controller
             'name' => 'required',
             'date' => 'required',
             'description' => 'required',
+            'link' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -76,74 +73,72 @@ class AwardsController extends Controller
         }
 
         $data = $validator->validated();
-        $Award = Award::create($data);
+        $certificate = Certificate::create($data);
 
         return response()->json([
             'success'   => true,
             'message'   => "success",
-            "data" => $Award
+            "data" => $certificate
         ]);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Award $award)
+    public function show(Certificate $certificate)
     {
-        // Check if the award belongs to the authenticated user
         $user = User::where("id", auth()->user()->id)->first();
         $profile = $user->profiles->first();
-        if ($award->profiles_id !== $profile->id) {
+        if ($certificate->profiles_id == $profile->id) {
             return response()->json([
-                'success' => false,
-                'message' => 'Unauthorized access to the award',
-            ], 403);
+                'success' => true,
+                'message' => 'success',
+                'data' => [
+                    'title' => $certificate->title,
+                    'name' => $certificate->name,
+                    'date' => $certificate->date,
+                    'link' => $certificate->link,
+                ],
+            ]);
+        }else{
+
         }
 
-        return response()->json([
-            'success' => true,
-            'message' => 'success',
-            'data' => [
-                'title' => $award->title,
-                'name' => $award->name,
-                'date' => $award->date,
-                'description' => $award->description,
-            ],
-        ]);
+
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Award $award)
+    public function update(Request $request, Certificate $certificate)
     {
         $data = [
             'description' => $request->description,
             'date' => $request->date,
             'name' => $request->name,
             'title' => $request->title,
+            'link' => $request->link
         ];
 
 
-        $award->update($data);
+        $certificate->update($data);
 
         return response()->json([
             'success' => true,
             'message' => 'Award me updated successfully',
-            'data' => $award,
+            'data' => $certificate,
         ]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Award $award)
+    public function destroy(Certificate $certificate)
     {
-        $award->delete();
+        $certificate->delete();
         return response()->json([
             'success' => true,
-            'message' => 'Award me deleted successfully',
+            'message' => 'Certificate me deleted successfully',
         ]);
-
     }
 }

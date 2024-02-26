@@ -5,7 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Certificates extends Model
+class Certificate extends Model
 {
-    use HasFactory;
+    protected $table = 'certificates';
+    protected $primaryKey = 'id';
+    protected $guarded = [];
 }
