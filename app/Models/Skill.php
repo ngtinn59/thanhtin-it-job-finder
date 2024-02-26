@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class skills extends Model
+class Skill extends Model
 {
     use HasFactory;
     protected $table = 'skills';
@@ -21,6 +21,4 @@ class skills extends Model
     {
         return $this->belongsTo(profiles::class,'profiles_id','id');
     }
-
-
 }
