@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class profiles extends Model
+class Profile extends Model
 {
     use HasFactory;
     protected $table = 'profiles';
@@ -44,5 +44,4 @@ class profiles extends Model
     {
         return $this->hasMany(responsibilities::class,'profiles_id','id');
     }
-
 }
