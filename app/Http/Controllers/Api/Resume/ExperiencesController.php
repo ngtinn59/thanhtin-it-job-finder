@@ -31,7 +31,6 @@ class ExperiencesController extends Controller
             ];
         });
 
-        // Trả về danh sách giáo dục dưới dạng JSON
         return response()->json([
             'success' => true,
             'message' => 'success',
@@ -103,9 +102,9 @@ class ExperiencesController extends Controller
             'success' => true,
             'message' => 'success',
             'data' => [
-                'title' => $experience->shcool_name,
+                'title' => $experience->title,
                 'company' => $experience->company,
-                'stat_date' => $experience->start_date,
+                'start_date' => $experience->start_date,
                 'end_date' => $experience->end_date,
                 'description' => $experience->description,
                 'projects' => $experience->projects,
@@ -121,7 +120,7 @@ class ExperiencesController extends Controller
         $data = [
             'title' => $request->title,
             'company' => $request->company,
-            'stat_date' => $request->stat_date,
+            'start_date' => $request->start_date,
             'end_date' => $request->end_date,
             'description' => $request->description,
             'projects' => $request->projects,
@@ -133,7 +132,7 @@ class ExperiencesController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Award me updated successfully',
+            'message' => 'Experience updated successfully',
             'data' => $experience,
         ]);
     }
@@ -147,7 +146,7 @@ class ExperiencesController extends Controller
         $experience->delete();
         return response()->json([
             'success' => true,
-            'message' => 'Experience me deleted successfully',
+            'message' => 'Experience deleted successfully',
             'data' => $experience,
         ]);
     }

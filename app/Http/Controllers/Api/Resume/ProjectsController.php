@@ -20,7 +20,7 @@ class ProjectsController extends Controller
     public function index()
     {
         $user = User::where("id", auth()->user()->id)->firstOrFail();
-        $profiles = profiles::where("users_id", $user->id)->firstOrFail();
+        $profiles = profile::where("users_id", $user->id)->firstOrFail();
         $project = Project::where("profiles_id", $profiles->id)->get();
         $projectData = $project->map(function ($project) {
             return [
@@ -48,7 +48,7 @@ class ProjectsController extends Controller
     public function store(Request $request)
     {
         $user = User::where("id", auth()->user()->id)->first();
-        $profile = $user->profiles->first();
+        $profile = $user->profile->first();
         $profiles_id = $profile->id;
         $data = [
             'name' => $request->input('name'),
@@ -79,7 +79,7 @@ class ProjectsController extends Controller
         }
 
         $data = $validator->validated();
-        $projects = projects::create($data);
+        $projects = project::create($data);
 
         return response()->json([
             'success'   => true,
@@ -98,7 +98,7 @@ class ProjectsController extends Controller
     public function show(Request $request, Project $project)
     {
         $user = User::where("id", auth()->user()->id)->first();
-        $profile = $user->profiles->first();
+        $profile = $user->profile->first();
         if ($project->profiles_id == $profile->id) {
             return response()->json([
                 'success' => true,

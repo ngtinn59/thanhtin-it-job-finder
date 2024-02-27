@@ -19,11 +19,15 @@ class CertificatesController extends Controller
     public function index()
     {
         $user = User::where("id", auth()->user()->id)->firstOrFail();
-        $profiles = profiles::where("users_id", $user->id)->firstOrFail();
+        $profiles = profile::where("users_id", $user->id)->firstOrFail();
         $certificate = Certificate::where("profiles_id", $profiles->id)->get();
         $certificateData = $certificate->map(function ($certificate) {
             return [
+                'name' => $certificate->name,
+                'title' => $certificate->title,
+                'date' => $certificate->date,
                 'description' => $certificate->description,
+                'link' => $certificate->link
             ];
         });
 

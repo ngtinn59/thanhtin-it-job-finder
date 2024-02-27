@@ -11,7 +11,7 @@ class Profile extends Model
     protected $table = 'profiles';
     protected $primaryKey = 'id';
     protected $guarded = [];
-    
+
 
     public function skills()
     {

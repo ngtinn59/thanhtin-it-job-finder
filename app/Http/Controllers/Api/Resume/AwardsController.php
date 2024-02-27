@@ -47,7 +47,7 @@ class AwardsController extends Controller
     public function store(Request $request)
     {
         $user = User::where("id", auth()->user()->id)->first();
-        $profile = $user->profiles->first();
+        $profile = $user->profile->first();
         $profiles = $profile->id;
 
         $data = [
@@ -55,6 +55,7 @@ class AwardsController extends Controller
             'profiles_id' =>$profiles,
             'name' => $request->input('name'),
             'date' => $request->input('date'),
+            'link' => $request->input('link'),
             'description' => $request->input('description')
         ];
 
@@ -64,6 +65,8 @@ class AwardsController extends Controller
             'profiles_id' => 'required',
             'name' => 'required',
             'date' => 'required',
+            'link' => 'required',
+
             'description' => 'required',
         ]);
 

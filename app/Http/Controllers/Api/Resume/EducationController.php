@@ -48,13 +48,13 @@ class EducationController extends Controller
     public function store(Request $request)
     {
         $user = User::where("id", auth()->user()->id)->first();
-        $profile = $user->profiles->first();
+        $profile = $user->profile->first();
         $profiles_id = $profile->id;
         $data = [
             'shcool_name' => $request->input('shcool_name'),
             'degree' => $request->input('degree'),
-            'start-date' => $request->input('start-date'),
-            'end-date' => $request->input('end-date'),
+            'start_date' => $request->input('start_date'),
+            'end_date' => $request->input('end_date'),
             'details' => $request->input('details'),
             'studying' => $request->studying ? 1 : 0,
             'profiles_id' => $profiles_id
@@ -63,8 +63,8 @@ class EducationController extends Controller
         $validator = Validator::make($data, [
             'shcool_name' => 'required',
             'degree' => 'required',
-            'start-date' => 'required',
-            'end-date' => 'required',
+            'start_date' => 'required',
+            'end_date' => 'required',
             'studying' => 'required',
             'profiles_id' => 'required',
         ]);
