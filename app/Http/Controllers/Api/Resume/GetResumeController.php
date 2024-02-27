@@ -28,6 +28,11 @@ class GetResumeController extends Controller
                 'portfolio_url' => $profile->portfolio_url,
                 'github_url' => $profile->github_url,
                 'linkedin_url' => $profile->linkedin_url,
+                'aboutme' => $profile->abouts->map(function ($aboutme) {
+                    return [
+                        'description' => $aboutme->description,
+                    ];
+                }),
                 'educations' => $profile->educations->map(function ($education) {
                     return [
                         'shcool_name' => $education->shcool_name,

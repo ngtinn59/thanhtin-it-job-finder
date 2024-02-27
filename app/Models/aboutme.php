@@ -11,4 +11,9 @@ class aboutme extends Model
     protected $table = 'aboutme';
     protected $primaryKey = 'id';
     protected $guarded = [];
+
+    public function profile()
+    {
+        return $this->belongsTo(Profile::class,'profiles_id','id');
+    }
 }

@@ -18,7 +18,7 @@ class AboutmeController extends Controller
     public function index()
     {
         $user = User::where("id", auth()->user()->id)->firstOrFail();
-        $profiles = profiles::where("users_id", $user->id)->firstOrFail();
+        $profiles = profile::where("users_id", $user->id)->firstOrFail();
         $aboutme = aboutme::where("profiles_id", $profiles->id)->get();
         $aboutmeData = $aboutme->map(function ($aboutme) {
             return [
@@ -39,9 +39,12 @@ class AboutmeController extends Controller
      */
     public function store(Request $request)
     {
+        $user = User::where("id", auth()->user()->id)->first();
+        $profile = $user->profile->first();
+        $profiles = $profile->id;
         $data = [
             'description' => $request->input('description'),
-            'profiles_id' => $request->input('profiles_id')
+            'profiles_id' => $profiles
         ];
 
         $validator = Validator::make($data, [
@@ -74,7 +77,7 @@ class AboutmeController extends Controller
     public function show(aboutme $aboutme)
     {
         $user = User::where("id", auth()->user()->id)->first();
-        $profile = $user->profiles->first();
+        $profile = $user->profile->first();
         if ($aboutme->profiles_id !== $profile->id) {
             return response()->json([
                 'success' => false,

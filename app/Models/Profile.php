@@ -43,4 +43,9 @@ class Profile extends Model
         return $this->hasMany(Award::class,'profiles_id','id');
     }
 
+    public function abouts()  : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(aboutme::class,'profiles_id','id');
+    }
+
 }
