@@ -15,42 +15,44 @@ class ProfilesController extends Controller
      */
     public function index()
     {
-
-        $users = profile::with("skills")
+        $user = User::where("id", auth()->user()->id)->firstOrFail();
+        $profiles = Profile::where("users_id", $user->id)->firstOrFail();
+        $userData = Profile::with("skills")
             ->with(["experiences" => function ($query) {
                 $query->with("responsibilities");
             }])
             ->with(["projects" => function ($query) {
                 $query->with("stacks");
             }])
-            ->get();
-        $userData = $users->map(function ($user) {
-            return [
-                'name' => $user->name,
-                'title' => $user->title,
-                'about' => $user->about,
-                'phone' => $user->phone,
-                'email' => $user->email,
-                'skills' => $user->skills->pluck('name')->toArray(),
-                'experiences' => $user->experiences->map(function ($experience) {
-                    return [
-                        'title' => $experience->title,
-                        'company' => $experience->company,
-                        'date-range' => $experience->date_range,
-                        'responsibilities' => $experience->responsibilities->pluck('details')->toArray(),
-                    ];
-                }),
-                'projects' => $user->projects->map(function ($project) {
-                    return [
-                        'name' => $project->name,
-                        'url' => $project->url,
-                        'description' => $project->description,
-                        'repository' => $project->repository,
-                        'stacks' => $project->stacks->pluck('name')->toArray(),
-                    ];
-                }),
-            ];
-        });
+            ->get()
+            ->map(function ($profile) {
+                return [
+                    'name' => $profile->name,
+                    'title' => $profile->title,
+                    'about' => $profile->about,
+                    'phone' => $profile->phone,
+                    'email' => $profile->email,
+                    'skills' => $profile->skills->pluck('name')->toArray(),
+                    'experiences' => $profile->experiences->map(function ($experience) {
+                        return [
+                            'title' => $experience->title,
+                            'company' => $experience->company,
+                            'date-range' => $experience->date_range,
+                            'responsibilities' => $experience->responsibilities->pluck('details')->toArray(),
+                        ];
+                    }),
+                    'projects' => $profile->projects->map(function ($project) {
+                        return [
+                            'name' => $project->name,
+                            'url' => $project->url,
+                            'description' => $project->description,
+                            'repository' => $project->repository,
+                            'stacks' => $project->stacks->pluck('name')->toArray(),
+                        ];
+                    }),
+                ];
+            });
+
         return response()->json([
             'success'   => true,
             'message'   => "success",
