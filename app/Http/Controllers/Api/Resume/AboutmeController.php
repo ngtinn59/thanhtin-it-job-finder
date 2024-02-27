@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\Resume;
 use App\Models\aboutme;
 use App\Http\Controllers\Controller;
 use App\Models\educations;
-use App\Models\profiles;
+use App\Models\profile;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\Resume;
 
-use App\Models\profiles;
+use App\Models\Profile;
 use App\Models\Project;
 use App\Models\projects;
 use App\Models\Skill;
@@ -19,7 +19,7 @@ class SkillsController extends Controller
     public function index()
     {
         $user = User::where("id", auth()->user()->id)->firstOrFail();
-        $profiles = profiles::where("users_id", $user->id)->firstOrFail();
+        $profiles = profile::where("users_id", $user->id)->firstOrFail();
         $skill = Skill::where("profiles_id", $profiles->id)->get();
         $skillData = $skill->map(function ($skill) {
             return [
@@ -43,7 +43,7 @@ class SkillsController extends Controller
     public function store(Request $request)
     {
         $user = User::where("id", auth()->user()->id)->first();
-        $profile = $user->profiles->first();
+        $profile = $user->profile->first();
         $profiles_id = $profile->id;
         $data = [
             'name' => $request->input('name'),
@@ -81,7 +81,7 @@ class SkillsController extends Controller
     public function show(Skill $skill)
     {
         $user = User::where("id", auth()->user()->id)->first();
-        $profile = $user->profiles->first();
+        $profile = $user->profile->first();
 
         if ($skill->profiles_id == $profile->id) {
             return response()->json([

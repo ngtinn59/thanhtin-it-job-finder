@@ -12,36 +12,28 @@ class Profile extends Model
     protected $primaryKey = 'id';
     protected $guarded = [];
 
-
-
-    public function educations()
+    public function education()
     {
         return $this->hasMany(educations::class);
     }
 
-    public function experiences()
-    {
-        return $this->hasMany(experiences::class, 'profiles_id','id');
-    }
-
-    public function projects()
-    {
-        return $this->hasMany(projects::class,'profiles_id','id');
-    }
-
     public function skills()
     {
-        return $this->hasMany(skills::class,'profiles_id','id');
+        return $this->hasMany(Skill::class, 'profiles_id', 'id');
     }
 
-
-    public function Users()
+    public function experiences()  : \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->belongsTo(User::class,'users_id','id');
+        return $this->hasMany(Experience::class,'profiles_id','id');
     }
 
-    public function responsibilities()
+    public function projects()  : \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(responsibilities::class,'profiles_id','id');
+        return $this->hasMany(Project::class,'profiles_id','id');
+    }
+
+    public function educations()  : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(educations::class,'profiles_id','id');
     }
 }

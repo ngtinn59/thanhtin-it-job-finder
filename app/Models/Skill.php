@@ -17,8 +17,8 @@ class Skill extends Model
         return $this->hasOne(experiences::class,'skills_id','id');
     }
 
-    public function profiles()
+    public function profile()
     {
-        return $this->belongsTo(profiles::class,'profiles_id','id');
+        return $this->belongsTo(Profile::class,'profiles_id','id');
     }
 }

@@ -12,4 +12,9 @@ class Experience extends Model
     protected $table = 'experiences';
     protected $primaryKey = 'id';
     protected $guarded = [];
+
+    public function profile(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(profile::class);
+    }
 }

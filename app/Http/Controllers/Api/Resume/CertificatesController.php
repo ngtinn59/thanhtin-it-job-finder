@@ -6,7 +6,7 @@ use App\Models\aboutme;
 use App\Models\Award;
 use App\Models\Certificate;
 use App\Http\Controllers\Controller;
-use App\Models\profiles;
+use App\Models\profile;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -41,7 +41,7 @@ class CertificatesController extends Controller
     public function store(Request $request)
     {
         $user = User::where("id", auth()->user()->id)->first();
-        $profile = $user->profiles->first();
+        $profile = $user->profile->first();
         $profiles = $profile->id;
 
         $data = [
@@ -88,7 +88,7 @@ class CertificatesController extends Controller
     public function show(Certificate $certificate)
     {
         $user = User::where("id", auth()->user()->id)->first();
-        $profile = $user->profiles->first();
+        $profile = $user->profile->first();
         if ($certificate->profiles_id == $profile->id) {
             return response()->json([
                 'success' => true,

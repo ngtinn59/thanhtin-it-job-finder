@@ -58,9 +58,9 @@ class User extends Authenticatable
         return $this->hasMany(recruitments::class,'users_id','id');
     }
 
-    public function profiles()
+    public function profile()
     {
-        return $this->hasMany(profiles::class,'users_id','id');
+        return $this->hasMany(profile::class,'users_id','id');
     }
 
     public function companies()

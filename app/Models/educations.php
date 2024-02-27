@@ -14,9 +14,9 @@ class educations extends Model
     protected $primaryKey = 'id';
     protected $guarded = [];
 
-    public function profiles()
+    public function profile()
     {
-        return $this->belongsTo(profiles::class);
+        return $this->belongsTo(profile::class);
     }
 
 }

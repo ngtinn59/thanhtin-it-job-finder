@@ -11,4 +11,10 @@ class Project extends Model
     protected $table = 'projects';
     protected $primaryKey = 'id';
     protected $guarded = [];
+
+    public function profile(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(profile::class);
+    }
+
 }

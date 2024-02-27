@@ -6,7 +6,7 @@ use App\Models\Award;
 use App\Http\Controllers\Controller;
 use App\Models\Certificate;
 use App\Models\educations;
-use App\Models\profiles;
+use App\Models\profile;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -19,7 +19,7 @@ class AwardsController extends Controller
     public function index()
     {
         $user = User::where("id", auth()->user()->id)->firstOrFail();
-        $profiles = profiles::where("users_id", $user->id)->firstOrFail();
+        $profiles = profile::where("users_id", $user->id)->firstOrFail();
         $awards = Award::where("profiles_id", $profiles->id)->get();
 
         $awardsData = $awards->map(function ($awards) {

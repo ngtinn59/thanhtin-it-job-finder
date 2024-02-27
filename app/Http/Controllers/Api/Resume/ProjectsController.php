@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\Resume;
 
 use App\Models\Certificate;
 use App\Models\experiences;
-use App\Models\profiles;
+use App\Models\Profile;
 use App\Models\Project;
 use App\Http\Controllers\Controller;
 use App\Models\projects;

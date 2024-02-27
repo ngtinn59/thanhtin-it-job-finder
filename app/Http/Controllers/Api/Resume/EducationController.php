@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\Resume;
 
 use App\Http\Controllers\Controller;
 use App\Models\educations;
-use App\Models\profiles;
+use App\Models\profile;
 use App\Models\User;
 use App\Utillities\Constant;
 use Illuminate\Http\Request;
