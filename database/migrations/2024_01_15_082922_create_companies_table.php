@@ -13,13 +13,30 @@ return new class extends Migration
     {
         Schema::create('companies', function (Blueprint $table) {
             $table->id();
-            $table->string('slug_title');
-            $table->string('company_name');
-            $table->string('introduction');
+            $table->foreignId('users_id');
+            $table->foreignId('country_id');
+            $table->foreignId('city_id');
+            $table->foreignId('location_id');
+            $table->foreignId('skillscompanies_id');
 
-            $table->string('address_work');
-            $table->string('website_url');
+            $table->string('title');
+            $table->string('url_tilte');
+            $table->string('company_size');
+            $table->string('company_type');
+            $table->string('Working_days');
+            $table->string('Overtime_policy');
+
+            $table->string('webstie')->nullable();
+            $table->string('facebook')->nullable();
+            $table->string('logo')->nullable();
+            $table->string('address');
+            $table->string('description');
             $table->timestamps();
+            $table->foreign('users_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('country_id')->references('id')->on('countries')->onDelete('cascade');
+            $table->foreign('city_id')->references('id')->on('cities')->onDelete('cascade');
+            $table->foreign('location_id')->references('id')->on('locations')->onDelete('cascade');
+            $table->foreign('skillscompanies_id')->references('id')->on('skills_comapies')->onDelete('cascade');
         });
     }
 
