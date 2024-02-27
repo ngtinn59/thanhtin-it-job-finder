@@ -73,7 +73,22 @@ class AboutmeController extends Controller
      */
     public function show(aboutme $aboutme)
     {
-        //
+        $user = User::where("id", auth()->user()->id)->first();
+        $profile = $user->profiles->first();
+        if ($aboutme->profiles_id !== $profile->id) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized access to the award',
+            ], 403);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'success',
+            'data' => [
+                'description' => $aboutme->description,
+            ],
+        ]);
     }
 
     /**

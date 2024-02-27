@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Resume;
 
 use App\Models\Profile;
 use App\Http\Controllers\Controller;
+use App\Models\Skill;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -16,47 +17,27 @@ class ProfilesController extends Controller
     public function index()
     {
         $user = User::where("id", auth()->user()->id)->firstOrFail();
-        $profiles = Profile::where("users_id", $user->id)->firstOrFail();
-        $userData = Profile::with("skills")
-            ->with(["experiences" => function ($query) {
-                $query->with("responsibilities");
-            }])
-            ->with(["projects" => function ($query) {
-                $query->with("stacks");
-            }])
-            ->get()
-            ->map(function ($profile) {
-                return [
-                    'name' => $profile->name,
-                    'title' => $profile->title,
-                    'about' => $profile->about,
-                    'phone' => $profile->phone,
-                    'email' => $profile->email,
-                    'skills' => $profile->skills->pluck('name')->toArray(),
-                    'experiences' => $profile->experiences->map(function ($experience) {
-                        return [
-                            'title' => $experience->title,
-                            'company' => $experience->company,
-                            'date-range' => $experience->date_range,
-                            'responsibilities' => $experience->responsibilities->pluck('details')->toArray(),
-                        ];
-                    }),
-                    'projects' => $profile->projects->map(function ($project) {
-                        return [
-                            'name' => $project->name,
-                            'url' => $project->url,
-                            'description' => $project->description,
-                            'repository' => $project->repository,
-                            'stacks' => $project->stacks->pluck('name')->toArray(),
-                        ];
-                    }),
-                ];
-            });
+        $profile = profile::where("users_id", $user->id)->get();
+        $profilesData = $profile->map(function ($profile) {
+            return [
+                'title' => $profile->title,
+                'name' => $profile->name,
+                'phone' => $profile->phone,
+                'email' => $profile->email,
+                'date_of_birth' => $profile->date_of_birth,
+                'gender' => $profile->gender,
+                'address' => $profile->address,
+                'portfolio_url' => $profile->portfolio_url,
+                'github_url' => $profile->github_url,
+                'linkedin_url' => $profile->linkedin_url,
+            ];
+        });
 
+        // Trả về danh sách giáo dục dưới dạng JSON
         return response()->json([
-            'success'   => true,
-            'message'   => "success",
-            "data" => $userData
+            'success' => true,
+            'message' => 'success',
+            'data' => $profilesData
         ]);
     }
 

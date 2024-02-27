@@ -11,11 +11,7 @@ class Profile extends Model
     protected $table = 'profiles';
     protected $primaryKey = 'id';
     protected $guarded = [];
-
-    public function education()
-    {
-        return $this->hasMany(educations::class);
-    }
+    
 
     public function skills()
     {
@@ -36,4 +32,15 @@ class Profile extends Model
     {
         return $this->hasMany(educations::class,'profiles_id','id');
     }
+
+    public function certificates()  : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Certificate::class,'profiles_id','id');
+    }
+
+    public function awards()  : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Award::class,'profiles_id','id');
+    }
+
 }

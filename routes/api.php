@@ -44,6 +44,7 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::resource('certificates', CertificatesController::class);
     Route::resource('awards', AwardsController::class);
     Route::resource('projects', ProjectsController::class);
+    Route::resource('getresume', \App\Http\Controllers\Api\Resume\GetResumeController::class);
 
     Route::apiResource('experiences', ExperiencesController::class);
     Route::resource('stacks', StackController::class);
