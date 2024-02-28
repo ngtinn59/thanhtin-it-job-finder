@@ -36,7 +36,7 @@ return new class extends Migration
             $table->foreign('country_id')->references('id')->on('countries')->onDelete('cascade');
             $table->foreign('city_id')->references('id')->on('cities')->onDelete('cascade');
             $table->foreign('location_id')->references('id')->on('locations')->onDelete('cascade');
-            $table->foreign('skillscompanies_id')->references('id')->on('skills_comapies')->onDelete('cascade');
+            $table->foreign('skillscompanies_id')->references('id')->on('skill_companies')->onDelete('cascade');
         });
     }
 

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Api\Resume;
 
-use App\Models\Profile;
 use App\Http\Controllers\Controller;
+use App\Models\Profile;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -14,8 +14,8 @@ class GetResumeController extends Controller
      */
     public function index()
     {
-        $user = User::where("id", auth()->user()->id)->firstOrFail();
-        $profile = profile::where("users_id", $user->id)->get();
+        $user = User::where('id', auth()->user()->id)->firstOrFail();
+        $profile = profile::where('users_id', $user->id)->get();
         $profilesData = $profile->map(function ($profile) {
             return [
                 'title' => $profile->title,
@@ -23,7 +23,7 @@ class GetResumeController extends Controller
                 'phone' => $profile->phone,
                 'email' => $profile->email,
                 'date_of_birth' => $profile->date_of_birth,
-                'gender' => $profile->gender,
+                'gender' => $profile->gender === 1 ? 'Male' : 'Female',
                 'address' => $profile->address,
                 'portfolio_url' => $profile->portfolio_url,
                 'github_url' => $profile->github_url,
@@ -106,10 +106,11 @@ class GetResumeController extends Controller
                 }),
             ];
         });
+
         return response()->json([
             'success' => true,
             'message' => 'success',
-            'data' => $profilesData
+            'data' => $profilesData,
         ]);
     }
 

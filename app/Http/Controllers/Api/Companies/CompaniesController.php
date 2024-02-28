@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Api\Companies;
 
-use App\Models\Company;
 use App\Http\Controllers\Controller;
+use App\Models\Company;
 use Illuminate\Http\Request;
 
 class CompaniesController extends Controller
@@ -21,7 +21,18 @@ class CompaniesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = [
+            'title' => $request->title,
+            'url_tilte' => $request->url_tilte,
+            'company_size' => $request->company_size,
+            'Working_days' => $request->Working_days,
+            'Overtime_policy' => $request->Overtime_policy,
+            'webstie' => $request->webstie,
+            'facebook' => $request->facebook,
+            'logo' => $request->logo,
+            'address' => $request->address,
+            'description' => $request->description
+        ];
     }
 
     /**
