@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\Companies\CompaniesController;
 use App\Http\Controllers\Api\Recruitments\experience_levelController;
 use App\Http\Controllers\Api\Recruitments\FormofworkController;
 use App\Http\Controllers\Api\Recruitments\job_descriptionController;
@@ -46,6 +47,7 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::resource('awards', AwardsController::class);
     Route::resource('projects', ProjectsController::class);
     Route::resource('getresume', GetResumeController::class);
+    Route::resource('companies', CompaniesController::class);
 
     Route::apiResource('experiences', ExperiencesController::class);
     Route::resource('stacks', StackController::class);

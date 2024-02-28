@@ -18,29 +18,37 @@ class GetResumeController extends Controller
         $profile = profile::where('users_id', $user->id)->get();
         $profilesData = $profile->map(function ($profile) {
             return [
-                'title' => $profile->title,
-                'name' => $profile->name,
-                'phone' => $profile->phone,
-                'email' => $profile->email,
-                'date_of_birth' => $profile->date_of_birth,
-                'gender' => $profile->gender === 1 ? 'Male' : 'Female',
-                'address' => $profile->address,
-                'portfolio_url' => $profile->portfolio_url,
-                'github_url' => $profile->github_url,
-                'linkedin_url' => $profile->linkedin_url,
+//                'title' => $profile->title,
+//                'name' => $profile->name,
+//                'phone' => $profile->phone,
+//                'email' => $profile->email,
+//                'date_of_birth' => $profile->date_of_birth,
+//                'gender' => $profile->gender === 1 ? 'Male' : 'Female',
+//                'address' => $profile->address,
+//                'portfolio_url' => $profile->portfolio_url,
+//                'github_url' => $profile->github_url,
+//                'linkedin_url' => $profile->linkedin_url,
                 'aboutme' => $profile->abouts->map(function ($aboutme) {
                     return [
                         'description' => $aboutme->description,
                     ];
                 }),
                 'educations' => $profile->educations->map(function ($education) {
+                    $startDate = $education->start_date;
+                    $endDate = $education->end_date;
+
+                    $duration = [
+                        'start' => $startDate,
+                        'end' => $endDate
+                    ];
                     return [
-                        'shcool_name' => $education->shcool_name,
                         'degree' => $education->degree,
-                        'start_date' => $education->start_date,
-                        'end_date' => $education->end_date,
-                        'studying' => $education->studying,
-                        'details' => $education->details,
+                        'institution' => $education->shcool_name,
+//                        'start_date' => $education->start_date,
+//                        'end_date' => $education->end_date,
+                        'duration' => $duration,
+//                        'studying' => $education->studying,
+                        'additionalDetail' => $education->details,
                     ];
                 }),
                 'skills' => $profile->skills->map(function ($skill) {
@@ -65,42 +73,48 @@ class GetResumeController extends Controller
                         'level' => $levelString,
                     ];
                 }),
-                'projects' => $profile->projects->map(function ($project) {
-                    return [
-                        'name' => $project->name,
-                        'start_date' => $project->start_date,
-                        'end_date' => $project->end_date,
-                        'url' => $project->url,
-                        'description' => $project->description,
-                        'repository' => $project->repository,
-                    ];
-                }),
-                'Certificates' => $profile->certificates->map(function ($certificates) {
-                    return [
-                        'name' => $certificates->name,
-                        'title' => $certificates->title,
-                        'date' => $certificates->date,
-                        'link' => $certificates->link,
-                        'description' => $certificates->description,
+                'PersonalProject' => $profile->projects->map(function ($project) {
+                    $startDate = $project->start_date;
+                    $endDate = $project->end_date;
 
+                    $duration = [
+                        'start' => $startDate,
+                        'end' => $endDate
                     ];
-                }),
-                'experiences' => $profile->experiences->map(function ($experience) {
                     return [
-                        'title' => $experience->title,
-                        'company' => $experience->company,
-                        'start_date' => $experience->start_date,
-                        'end_date' => $experience->end_date,
-                        'description' => $experience->description,
-                        'projects' => $experience->projects,
+                        'title' => $project->name,
+                        'duration' => $duration,
+                        'description' => $project->description,
                     ];
                 }),
-                'Awards' => $profile->awards->map(function ($awards) {
+                'Certificate' => $profile->certificates->map(function ($certificates) {
+                    return [
+                        'title' => $certificates->title,
+                        'provider' => $certificates->name,
+                        'issueDate' => $certificates->date,
+                        'description' => $certificates->description,
+                        'certificateUrl' => $certificates->link,
+                    ];
+                }),
+                'WorkExperience' => $profile->experiences->map(function ($experience) {
+                    $startDate = $experience->start_date;
+                    $endDate = $experience->end_date;
+                    $duration = [
+                        'start' => $startDate,
+                        'end' => $endDate
+                    ];
+                    return [
+                        'position' => $experience->title,
+                        'company' => $experience->company,
+                        'duration' => $duration,
+                        'responsibilities' => $experience->responsibilities,
+                    ];
+                }),
+                'Award' => $profile->awards->map(function ($awards) {
                     return [
                         'title' => $awards->title,
-                        'name' => $awards->name,
-                        'date' => $awards->date,
-                        'link' => $awards->link,
+                        'provider' => $awards->name,
+                        'issueDate' => $awards->date,
                         'description' => $awards->description,
                     ];
                 }),
