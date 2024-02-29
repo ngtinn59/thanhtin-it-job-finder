@@ -43,12 +43,9 @@ class GetResumeController extends Controller
                     ];
                     return [
                         'degree' => $education->degree,
-                        'institution' => $education->shcool_name,
-//                        'start_date' => $education->start_date,
-//                        'end_date' => $education->end_date,
+                        'institution' => $education->institution,
                         'duration' => $duration,
-//                        'studying' => $education->studying,
-                        'additionalDetail' => $education->details,
+                        'additionalDetail' => $education->additionalDetail,
                     ];
                 }),
                 'skills' => $profile->skills->map(function ($skill) {
@@ -82,7 +79,7 @@ class GetResumeController extends Controller
                         'end' => $endDate
                     ];
                     return [
-                        'title' => $project->name,
+                        'title' => $project->title,
                         'duration' => $duration,
                         'description' => $project->description,
                     ];
@@ -90,10 +87,10 @@ class GetResumeController extends Controller
                 'Certificate' => $profile->certificates->map(function ($certificates) {
                     return [
                         'title' => $certificates->title,
-                        'provider' => $certificates->name,
-                        'issueDate' => $certificates->date,
+                        'provider' => $certificates->provider,
+                        'issueDate' => $certificates->issueDate,
                         'description' => $certificates->description,
-                        'certificateUrl' => $certificates->link,
+                        'certificateUrl' => $certificates->certificateUrl,
                     ];
                 }),
                 'WorkExperience' => $profile->experiences->map(function ($experience) {
@@ -104,7 +101,7 @@ class GetResumeController extends Controller
                         'end' => $endDate
                     ];
                     return [
-                        'position' => $experience->title,
+                        'position' => $experience->position,
                         'company' => $experience->company,
                         'duration' => $duration,
                         'responsibilities' => $experience->responsibilities,
@@ -113,8 +110,8 @@ class GetResumeController extends Controller
                 'Award' => $profile->awards->map(function ($awards) {
                     return [
                         'title' => $awards->title,
-                        'provider' => $awards->name,
-                        'issueDate' => $awards->date,
+                        'provider' => $awards->provider,
+                        'issueDate' => $awards->issueDate,
                         'description' => $awards->description,
                     ];
                 }),

@@ -23,11 +23,11 @@ class CertificatesController extends Controller
         $certificate = Certificate::where("profiles_id", $profiles->id)->get();
         $certificateData = $certificate->map(function ($certificate) {
             return [
-                'name' => $certificate->name,
                 'title' => $certificate->title,
-                'date' => $certificate->date,
+                'provider' => $certificate->provider,
+                'issueDate' => $certificate->issueDate,
                 'description' => $certificate->description,
-                'link' => $certificate->link
+                'certificateUrl' => $certificate->certificateUrl
             ];
         });
 
@@ -51,10 +51,10 @@ class CertificatesController extends Controller
         $data = [
             'title' => $request->input('title'),
             'profiles_id' =>$profiles,
-            'name' => $request->input('name'),
-            'date' => $request->input('date'),
+            'provider' => $request->input('provider'),
+            'issueDate' => $request->input('issueDate'),
             'description' => $request->input('description'),
-            'link' => $request->input('link')
+            'certificateUrl' => $request->input('certificateUrl')
 
         ];
 
@@ -62,10 +62,10 @@ class CertificatesController extends Controller
         $validator = Validator::make($data, [
             'title' => 'required',
             'profiles_id' => 'required',
-            'name' => 'required',
-            'date' => 'required',
+            'provider' => 'required',
+            'issueDate' => 'required',
             'description' => 'required',
-            'link' => 'required',
+            'certificateUrl' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -99,9 +99,11 @@ class CertificatesController extends Controller
                 'message' => 'success',
                 'data' => [
                     'title' => $certificate->title,
-                    'name' => $certificate->name,
-                    'date' => $certificate->date,
-                    'link' => $certificate->link,
+                    'provider' => $certificate->provider,
+                    'issueDate' => $certificate->issueDate,
+                    'description' => $certificate->description,
+                    'certificateUrl' => $certificate->certificateUrl,
+
                 ],
             ]);
         }else{
@@ -117,11 +119,11 @@ class CertificatesController extends Controller
     public function update(Request $request, Certificate $certificate)
     {
         $data = [
-            'description' => $request->description,
-            'date' => $request->date,
-            'name' => $request->name,
+            'title' => $request->description,
+            'provider' => $request->date,
+            'issueDate' => $request->name,
             'title' => $request->title,
-            'link' => $request->link
+            'description' => $request->link
         ];
 
 

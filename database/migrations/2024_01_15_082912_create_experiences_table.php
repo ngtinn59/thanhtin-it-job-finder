@@ -13,12 +13,11 @@ return new class extends Migration
     {
         Schema::create('experiences', function (Blueprint $table) {
             $table->id();
-            $table->string("title")->nullable();
+            $table->string("position")->nullable();
             $table->string("company")->nullable();
             $table->string("stat_date",100)->nullable();
             $table->string("end_date",100)->nullable();
-            $table->string("description")->nullable();
-            $table->string("projects")->nullable();
+            $table->string("responsibilities")->nullable();
             $table->unsignedBigInteger('profiles_id');
             $table->foreign('profiles_id')->references('id')->on('profiles')->onDelete('cascade');
             $table->timestamps();

@@ -32,11 +32,11 @@ return new class extends Migration
             $table->string('address');
             $table->string('description');
             $table->timestamps();
-            $table->foreign('users_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('country_id')->references('id')->on('countries')->onDelete('cascade');
-            $table->foreign('city_id')->references('id')->on('cities')->onDelete('cascade');
-            $table->foreign('location_id')->references('id')->on('locations')->onDelete('cascade');
-            $table->foreign('skillscompanies_id')->references('id')->on('skill_companies')->onDelete('cascade');
+//            $table->foreign('users_id')->references('id')->on('users')->onDelete('cascade');
+//            $table->foreign('country_id')->references('id')->on('countries')->onDelete('cascade');
+//            $table->foreign('city_id')->references('id')->on('cities')->onDelete('cascade');
+//            $table->foreign('location_id')->references('id')->on('locations')->onDelete('cascade');
+//            $table->foreign('skillscompanies_id')->references('id')->on('skill_companies')->onDelete('cascade');
         });
     }
 

@@ -23,13 +23,11 @@ class EducationController extends Controller
 
         $educationsData = $educations->map(function ($education) {
             return [
-                'id' => $education->id,
-                'shcool_name' => $education->shcool_name,
                 'degree' => $education->degree,
+                'institution' => $education->institution,
                 'start_date' => $education->start_date,
                 'end_date' => $education->end_date,
-                'details' => $education->details,
-                'studying' => $education->studying,
+                'additionalDetail' => $education->additionalDetail,
             ];
         });
 
@@ -51,12 +49,11 @@ class EducationController extends Controller
         $profile = $user->profile->first();
         $profiles_id = $profile->id;
         $data = [
-            'shcool_name' => $request->input('shcool_name'),
             'degree' => $request->input('degree'),
+            'institution' => $request->input('institution'),
             'start_date' => $request->input('start_date'),
             'end_date' => $request->input('end_date'),
-            'details' => $request->input('details'),
-            'studying' => $request->studying ? 1 : 0,
+            'additionalDetail' => $request->input('additionalDetail'),
             'profiles_id' => $profiles_id
         ];
 
@@ -106,12 +103,11 @@ class EducationController extends Controller
             'success' => true,
             'message' => 'success',
             'data' => [
-                'title' => $education->shcool_name,
-                'name' => $education->degree,
+                'degree' => $education->degree,
+                'institution' => $education->institution,
                 'start_date' => $education->start_date,
                 'end_date' => $education->end_date,
-                'studying' => $education->studying,
-                'details' => $education->details,
+                'additionalDetail' => $education->additionalDetail,
             ],
         ]);
     }
@@ -124,12 +120,11 @@ class EducationController extends Controller
         $profile = $user->profiles->first();
         $profiles_id = $profile->id;
         $data = [
-            'shcool_name' => $request->input('shcool_name'),
             'degree' => $request->input('degree'),
+            'institution' => $request->input('institution'),
             'start_date' => $request->input('start_date'),
             'end_date' => $request->input('end_date'),
-            'details' => $request->input('details'),
-            'studying' => $request->studying ? 1 : 0,
+            'additionalDetail' => $request->input('additionalDetail'),
             'profiles_id' => $profiles_id
         ];
 

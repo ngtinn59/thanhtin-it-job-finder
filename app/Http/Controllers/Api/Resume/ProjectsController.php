@@ -24,13 +24,10 @@ class ProjectsController extends Controller
         $project = Project::where("profiles_id", $profiles->id)->get();
         $projectData = $project->map(function ($project) {
             return [
-                'id' => $project->id,
-                'name' => $project->name,
+                'title' => $project->title,
                 'start_date' => $project->start_date,
                 'end_date' => $project->end_date,
-                'url' => $project->url,
                 'description' => $project->description,
-                'repository' => $project->repository,
             ];
         });
 
@@ -51,22 +48,18 @@ class ProjectsController extends Controller
         $profile = $user->profile->first();
         $profiles_id = $profile->id;
         $data = [
-            'name' => $request->input('name'),
+            'title' => $request->input('title'),
             'start_date' => $request->input('start_date'),
             'end_date' => $request->input('end_date'),
-            'url' => $request->input('url'),
             'description' => $request->input('description'),
-            'repository' => $request->input('repository'),
             'profiles_id' => $profiles_id
         ];
 
         $validator = Validator::make($data, [
-            'name' => 'required',
+            'title' => 'required',
             'start_date' => 'required',
             'end_date' => 'required',
             'description' => 'required',
-            'url' => 'required',
-            'repository' => 'required',
             'profiles_id' => 'required',
         ]);
 
@@ -99,6 +92,7 @@ class ProjectsController extends Controller
     {
         $user = User::where("id", auth()->user()->id)->first();
         $profile = $user->profile->first();
+
         if ($project->profiles_id == $profile->id) {
             return response()->json([
                 'success' => true,

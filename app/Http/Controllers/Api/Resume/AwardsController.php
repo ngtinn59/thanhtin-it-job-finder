@@ -26,10 +26,9 @@ class AwardsController extends Controller
             return [
                 'id' => $awards->id,
                 'title' => $awards->title,
-                'name' => $awards->name,
-                'date' => $awards->date,
+                'provider' => $awards->name,
+                'issueDate' => $awards->date,
                 'description' => $awards->description,
-
             ];
         });
 
@@ -53,9 +52,8 @@ class AwardsController extends Controller
         $data = [
             'title' => $request->input('title'),
             'profiles_id' =>$profiles,
-            'name' => $request->input('name'),
-            'date' => $request->input('date'),
-            'link' => $request->input('link'),
+            'provider' => $request->input('provider'),
+            'issueDate' => $request->input('issueDate'),
             'description' => $request->input('description')
         ];
 
@@ -63,10 +61,8 @@ class AwardsController extends Controller
         $validator = Validator::make($data, [
             'title' => 'required',
             'profiles_id' => 'required',
-            'name' => 'required',
-            'date' => 'required',
-            'link' => 'required',
-
+            'provider' => 'required',
+            'issueDate' => 'required',
             'description' => 'required',
         ]);
 
@@ -121,10 +117,10 @@ class AwardsController extends Controller
     public function update(Request $request, Award $award)
     {
         $data = [
-            'description' => $request->description,
-            'date' => $request->date,
-            'name' => $request->name,
             'title' => $request->title,
+            'provider' => $request->provider,
+            'issueDate' => $request->issueDate,
+            'description' => $request->description,
         ];
 
 

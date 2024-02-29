@@ -13,12 +13,11 @@ return new class extends Migration
     {
         Schema::create('educations', function (Blueprint $table) {
             $table->id();
-            $table->string("shcool_name",100)->nullable();
             $table->string("degree",100)->nullable();
+            $table->string("institution",100)->nullable();
             $table->date("start_date",30)->nullable();
             $table->date("end_date",30)->nullable();
-            $table->boolean("studying")->nullable();
-            $table->string('details',100)->nullable();
+            $table->string('additionalDetail',100)->nullable();
             $table->unsignedBigInteger('profiles_id');
             $table->foreign('profiles_id')->references('id')->on('profiles')->onDelete('cascade');
             $table->timestamps();

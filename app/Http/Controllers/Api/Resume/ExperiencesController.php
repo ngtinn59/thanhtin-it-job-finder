@@ -22,12 +22,11 @@ class ExperiencesController extends Controller
         $experience = Experience::where("profiles_id", $profiles->id)->get();
         $experienceData = $experience->map(function ($experience) {
             return [
-                'title' => $experience->title,
+                'position' => $experience->position,
                 'company' => $experience->company,
                 'start_date' => $experience->start_date,
                 'end_date' => $experience->end_date,
-                'description' => $experience->description,
-                'projects' => $experience->projects
+                'responsibilities' => $experience->responsibilities,
             ];
         });
 
@@ -47,23 +46,20 @@ class ExperiencesController extends Controller
         $profile = $user->profile->first();
         $profiles = $profile->id;
         $data = [
-            'title' => $request->input('title'),
+            'position' => $request->input('position'),
             'company' => $request->input('company'),
             'start_date' => $request->input('start_date'),
             'end_date' => $request->input('end_date'),
-            'description' => $request->input('description'),
-            'projects' => $request->input('projects'),
+            'responsibilities' => $request->input('responsibilities'),
             'profiles_id' => $profiles
         ];
         $validator = Validator::make($data, [
-            'title' => 'required',
+            'position' => 'required',
             'company' => 'required',
             'start_date' => 'required',
             'end_date' => 'required',
-            'description' => 'required',
-            'projects' => 'required',
+            'responsibilities' => 'required',
             'profiles_id' => 'required',
-
         ]);
 
         if ($validator->fails()) {
@@ -102,12 +98,11 @@ class ExperiencesController extends Controller
             'success' => true,
             'message' => 'success',
             'data' => [
-                'title' => $experience->title,
+                'position' => $experience->position,
                 'company' => $experience->company,
                 'start_date' => $experience->start_date,
                 'end_date' => $experience->end_date,
-                'description' => $experience->description,
-                'projects' => $experience->projects,
+                'responsibilities' => $experience->responsibilities,
             ],
         ]);
     }
@@ -118,13 +113,11 @@ class ExperiencesController extends Controller
     public function update(Request $request, Experience $experience)
     {
         $data = [
-            'title' => $request->title,
+            'position' => $request->position,
             'company' => $request->company,
             'start_date' => $request->start_date,
             'end_date' => $request->end_date,
-            'description' => $request->description,
-            'projects' => $request->projects,
-
+            'responsibilities' => $request->responsibilities,
         ];
 
 

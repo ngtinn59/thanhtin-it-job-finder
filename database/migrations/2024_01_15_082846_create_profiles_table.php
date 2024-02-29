@@ -18,12 +18,10 @@ return new class extends Migration
             $table->string("title",100)->nullable();
             $table->string("phone",20)->nullable();
             $table->string("email",50)->nullable();
-            $table->date("date_of_birth")->nullable();
+            $table->date("birthday")->nullable();
             $table->boolean("gender")->nullable();
-            $table->string("address")->nullable();
-            $table->string("portfolio_url",100)->nullable();
-            $table->string("github_url",100)->nullable();
-            $table->string("linkedin_url",100)->nullable();
+            $table->string("location")->nullable();
+            $table->string("website",100)->nullable();
             $table->foreign('users_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });

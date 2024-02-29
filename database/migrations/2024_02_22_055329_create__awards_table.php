@@ -14,10 +14,9 @@ return new class extends Migration
         Schema::create('awards', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('profiles_id');
-            $table->string("name",);
             $table->string("title",);
-            $table->date('date');
-            $table->string('link');
+            $table->string("provider",);
+            $table->date('issueDate');
             $table->string('description',);
             $table->foreign('profiles_id')->references('id')->on('profiles')->onDelete('cascade');
             $table->timestamps();

@@ -24,12 +24,10 @@ class ProfilesController extends Controller
                 'name' => $profile->name,
                 'phone' => $profile->phone,
                 'email' => $profile->email,
-                'date_of_birth' => $profile->date_of_birth,
+                'birthday' => $profile->birthday,
                 'gender' => $profile->gender,
-                'address' => $profile->address,
-                'portfolio_url' => $profile->portfolio_url,
-                'github_url' => $profile->github_url,
-                'linkedin_url' => $profile->linkedin_url,
+                'location' => $profile->location,
+                'website' => $profile->website,
             ];
         });
 
@@ -52,12 +50,9 @@ class ProfilesController extends Controller
             'title' => $request->input('title'),
             'phone' => $request->input('phone'),
             'email' => $request->input('email'),
-            'date_of_birth' => $request->input('date_of_birth'),
+            'birthday' => $request->input('birthday'),
             'gender' => $request->input('gender'),
-            'address' => $request->input('address'),
-            'portfolio_url' => $request->input('portfolio_url'),
-            'github_url' => $request->input('github_url'),
-            'linkedin_url' => $request->input('linkedin_url'),
+            'location' => $request->input('location'),
             'users_id' => auth()->user()->id
         ];
 
@@ -66,12 +61,10 @@ class ProfilesController extends Controller
             'title' => 'required',
             'phone' => 'required',
             'email' => 'required',
-            'date_of_birth' => 'required',
+            'birthday' => 'required',
             'gender' => 'required',
-            'address' => 'required',
-            'portfolio_url' => 'required',
-            'github_url' => 'required',
-            'linkedin_url' => 'required',
+            'location' => 'required',
+            'website' => 'required',
             'users_id' => 'required',
         ]);
 
@@ -118,12 +111,10 @@ class ProfilesController extends Controller
             'title' => $request->input('title'),
             'phone' => $request->input('phone'),
             'email' => $request->input('email'),
-            'date_of_birth' => $request->input('date_of_birth'),
+            'birthday' => $request->input('birthday'),
             'gender' => $request->input('gender'),
-            'address' => $request->input('address'),
-            'portfolio_url' => $request->input('portfolio_url'),
-            'github_url' => $request->input('github_url'),
-            'linkedin_url' => $request->input('linkedin_url'),
+            'location' => $request->input('location'),
+            'website' => $request->input('website'),
         ];
 
         $profile->update($data);
