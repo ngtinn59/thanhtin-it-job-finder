@@ -21,11 +21,11 @@ class ProfilesController extends Controller
         $profilesData = $profile->map(function ($profile) {
             return [
                 'title' => $profile->title,
-                'name' => $profile->name,
+                'name' => $profile->auth()->user()->name,
                 'phone' => $profile->phone,
-                'email' => $profile->email,
+                'email' => $profile->auth()->user()->email,
                 'birthday' => $profile->birthday,
-                'gender' => $profile->gender,
+                'gender' => $profile->gender == 1 ? 'Male' : 'Female',
                 'location' => $profile->location,
                 'website' => $profile->website,
             ];
@@ -53,6 +53,7 @@ class ProfilesController extends Controller
             'birthday' => $request->input('birthday'),
             'gender' => $request->input('gender'),
             'location' => $request->input('location'),
+            'website' => $request->input('website'),
             'users_id' => auth()->user()->id
         ];
 
@@ -81,7 +82,7 @@ class ProfilesController extends Controller
         return response()->json([
             'success'   => true,
             'message'   => "success",
-            "data" => $profile
+            "data" => $profile->toArray()
         ]);
 
     }
