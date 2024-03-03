@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string("phone",20)->nullable();
             $table->string("email",50)->nullable();
             $table->date("birthday")->nullable();
+            $table->date("image")->nullable();
             $table->boolean("gender")->nullable();
             $table->string("location")->nullable();
             $table->string("website",100)->nullable();

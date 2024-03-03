@@ -13,11 +13,9 @@ return new class extends Migration
     {
         Schema::create('locations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('users_id');
-            $table->foreignId('city_id');
+            $table->foreignId('company_id');
             $table->string('name');
-            $table->foreign('users_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('city_id')->references('id')->on('cities')->onDelete('cascade');
+            $table->foreign('company_id')->references('id')->on('companies')->onDelete('cascade');
             $table->timestamps();
         });
     }

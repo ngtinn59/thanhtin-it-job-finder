@@ -6,6 +6,7 @@ use App\Models\Profile;
 use App\Http\Controllers\Controller;
 use App\Models\Skill;
 use App\Models\User;
+use App\Utillities\Common;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -21,10 +22,11 @@ class ProfilesController extends Controller
         $profilesData = $profile->map(function ($profile) {
             return [
                 'title' => $profile->title,
-                'name' => $profile->auth()->user()->name,
+                'name' => $profile->name,
                 'phone' => $profile->phone,
-                'email' => $profile->auth()->user()->email,
+                'email' => $profile->email,
                 'birthday' => $profile->birthday,
+                'image' => $profile->image,
                 'gender' => $profile->gender == 1 ? 'Male' : 'Female',
                 'location' => $profile->location,
                 'website' => $profile->website,
@@ -44,20 +46,7 @@ class ProfilesController extends Controller
      */
     public function store(Request $request)
     {
-
-        $data = [
-            'name' => $request->input('name'),
-            'title' => $request->input('title'),
-            'phone' => $request->input('phone'),
-            'email' => $request->input('email'),
-            'birthday' => $request->input('birthday'),
-            'gender' => $request->input('gender'),
-            'location' => $request->input('location'),
-            'website' => $request->input('website'),
-            'users_id' => auth()->user()->id
-        ];
-
-        $validator = Validator::make($data, [
+        $validator = Validator::make($request->all(), [
             'name' => 'required',
             'title' => 'required',
             'phone' => 'required',
@@ -66,7 +55,8 @@ class ProfilesController extends Controller
             'gender' => 'required',
             'location' => 'required',
             'website' => 'required',
-            'users_id' => 'required',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Kiểm tra tập tin ảnh
+//            'users_id' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -77,14 +67,31 @@ class ProfilesController extends Controller
             ], 400);
         }
 
-        $data = $validator->validated();
+        $file = $request->file('image'); // Lấy đối tượng tập tin ảnh từ request
+        $path = public_path('uploads/images'); // Đường dẫn lưu trữ tập tin ảnh
+        $file_name = Common::uploadFile($file, $path); // Gọi phương thức uploadFile từ class Common để tải lên tập tin ảnh
+
+        // Tạo dữ liệu mới với đường dẫn của tập tin ảnh
+        $data = [
+            'name' => $request->input('name'),
+            'title' => $request->input('title'),
+            'phone' => $request->input('phone'),
+            'email' => $request->input('email'),
+            'birthday' => $request->input('birthday'),
+            'gender' => $request->input('gender'),
+            'location' => $request->input('location'),
+            'website' => $request->input('website'),
+            'image' => $file_name, // Đường dẫn của tập tin ảnh
+            'users_id' => auth()->user()->id,
+        ];
+        // Tạo profile mới trong cơ sở dữ liệu
         $profile = Profile::create($data);
+
         return response()->json([
             'success'   => true,
             'message'   => "success",
-            "data" => $profile->toArray()
+            'data' => $profile->toArray()
         ]);
-
     }
 
     /**
@@ -112,6 +119,7 @@ class ProfilesController extends Controller
             'title' => $request->input('title'),
             'phone' => $request->input('phone'),
             'email' => $request->input('email'),
+            'image' => $request->input('image'),
             'birthday' => $request->input('birthday'),
             'gender' => $request->input('gender'),
             'location' => $request->input('location'),

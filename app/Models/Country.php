@@ -5,14 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class jobs extends Model
+class Country extends Model
 {
     use HasFactory;
-    protected $table = 'jobs';
+
+    protected $table = 'countries';
+
     protected $primaryKey = 'id';
+
     protected $guarded = [];
-    public function experiences()
-    {
-        return $this->hasOne(experiences::class,'jobs_id','id');
-    }
 }

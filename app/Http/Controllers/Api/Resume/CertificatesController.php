@@ -120,10 +120,10 @@ class CertificatesController extends Controller
     {
         $data = [
             'title' => $request->description,
-            'provider' => $request->date,
-            'issueDate' => $request->name,
-            'title' => $request->title,
-            'description' => $request->link
+            'provider' => $request->provider,
+            'issueDate' => $request->issueDate,
+            'description' => $request->description,
+            'certificateUrl' => $request->certificateUrl
         ];
 
 
