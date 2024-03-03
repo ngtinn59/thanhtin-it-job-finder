@@ -5,14 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class jobs extends Model
+class job_type extends Model
 {
     use HasFactory;
-    protected $table = 'jobs';
+    protected $table = 'job_types';
     protected $primaryKey = 'id';
     protected $guarded = [];
-    public function experiences()
-    {
-        return $this->hasOne(experiences::class,'jobs_id','id');
-    }
 }

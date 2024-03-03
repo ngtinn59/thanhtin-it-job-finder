@@ -53,18 +53,13 @@ class User extends Authenticatable
         return $this->hasMany(company_reviews::class,'users_id','id');
     }
 
-    public function recruitments()
-    {
-        return $this->hasMany(recruitments::class,'users_id','id');
-    }
-
     public function profile()
     {
-        return $this->hasMany(profile::class,'users_id','id');
+        return $this->hasOne(profile::class,'users_id','id');
     }
 
     public function companies()
     {
-        return $this->hasMany(companies::class,'companies_id','id');
+        return $this->hasOne(Company::class,'users_id','id');
     }
 }

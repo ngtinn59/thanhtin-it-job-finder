@@ -1,13 +1,15 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\CountriesController;
+use App\Http\Controllers\Api\Admin\Job_typesController;
+use App\Http\Controllers\Api\Admin\LocationsController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\Companies\CompaniesController;
+use App\Http\Controllers\Api\Companies\CompanyLocationsController;
+use App\Http\Controllers\Api\Companies\Job_skillsController;
+use App\Http\Controllers\Api\Companies\JobsController;
+use App\Http\Controllers\Api\Employer\EmployerRegisterController;
 use App\Http\Controllers\Api\Recruitments\experience_levelController;
-use App\Http\Controllers\Api\Recruitments\FormofworkController;
-use App\Http\Controllers\Api\Recruitments\job_descriptionController;
-use App\Http\Controllers\Api\Recruitments\job_requirementsController;
-use App\Http\Controllers\Api\Recruitments\RecruitmentsController;
-use App\Http\Controllers\Api\Recruitments\skills_requiredController;
 use App\Http\Controllers\Api\Resume\AboutmeController;
 use App\Http\Controllers\Api\Resume\AwardsController;
 use App\Http\Controllers\Api\Resume\CertificatesController;
@@ -15,11 +17,8 @@ use App\Http\Controllers\Api\Resume\EducationController;
 use App\Http\Controllers\Api\Resume\ExperiencesController;
 use App\Http\Controllers\Api\Resume\GetResumeController;
 use App\Http\Controllers\Api\Resume\profilesController;
-use App\Http\Controllers\Api\Resume\ProjectController;
 use App\Http\Controllers\Api\Resume\ProjectsController;
-use App\Http\Controllers\Api\Resume\ResponsibilitiesController;
 use App\Http\Controllers\Api\Resume\skillsController;
-use App\Http\Controllers\Api\Resume\StackController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -34,11 +33,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/', [JobsController::class, 'index']);
 
-
+Route::post('employer/register', [EmployerRegisterController::class, 'employerRegister']);
 Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [AuthController::class, 'register']);
+
 Route::middleware('auth:sanctum')->group( function () {
+    //Resume
     Route::apiResource('profiles', profilesController::class);
     Route::apiResource('educations', EducationController::class);
     Route::apiResource('skills', skillsController::class);
@@ -47,28 +49,23 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::resource('awards', AwardsController::class);
     Route::resource('projects', ProjectsController::class);
     Route::resource('getresume', GetResumeController::class);
+
+
+    //Company
     Route::resource('companies', CompaniesController::class);
-
     Route::apiResource('experiences', ExperiencesController::class);
-    Route::resource('stacks', StackController::class);
-    Route::apiResource('responsibilities', ResponsibilitiesController::class);
+    Route::resource('companies/location', CompanyLocationsController::class);
+    Route::post('/companies/logo', [CompaniesController::class, 'logo'])->name('logo');
 
-    Route::prefix('profiles')->group(function () {
-        Route::resource('projects', ProjectController::class);
+    //Jobs
+    Route::resource('job/skill', Job_skillsController::class);
+    Route::resource('job', JobsController::class);
 
-        Route::prefix('projects')->group(function () {
+    //Admin
+    Route::resource('Admin/job_types', Job_typesController::class);
+    Route::resource('Admin/experience_level', experience_levelController::class);
+    Route::resource('Admin/locations', LocationsController::class);
+    Route::resource('Admin/country', CountriesController::class);
 
-        });
-
-
-    });
-
-    Route::apiResource('recruitments', RecruitmentsController::class);
-    Route::prefix('recruitments')->group(function () {
-        Route::apiResource('skills_recruitments', skills_requiredController::class);
-        Route::apiResource('experience_level', experience_levelController::class);
-        Route::apiResource('formofwork', FormofworkController::class);
-        Route::apiResource('job_description', job_descriptionController::class);
-        Route::apiResource('job_requirements', job_requirementsController::class);
-    });
+    Route::post('logout', [AuthController::class, 'logout']);
 });

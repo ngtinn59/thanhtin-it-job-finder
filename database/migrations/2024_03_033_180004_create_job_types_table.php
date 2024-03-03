@@ -11,11 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('experience_level', function (Blueprint $table) {
+        Schema::create('job_types', function (Blueprint $table) {
             $table->id();
-            $table->string("name",70)->nullable();
-            $table->unsignedBigInteger('recruitments_id');
-            $table->foreign('recruitments_id')->references('id')->on('recruitments')->onDelete('cascade');
+            $table->string('name');
             $table->timestamps();
         });
     }
@@ -25,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('experience_level');
+        Schema::dropIfExists('job_types');
     }
 };

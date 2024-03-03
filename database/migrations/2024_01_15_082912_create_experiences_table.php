@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string("position")->nullable();
             $table->string("company")->nullable();
-            $table->string("stat_date",100)->nullable();
+            $table->string("start_date",100)->nullable();
             $table->string("end_date",100)->nullable();
             $table->string("responsibilities")->nullable();
             $table->unsignedBigInteger('profiles_id');
