@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('users_id');
             $table->foreignId('country_id');
+            $table->foreignId('city_id');
             $table->string('name')->nullable();
             $table->string('company_size')->nullable();
             $table->string('company_type')->nullable();
