@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\Company_typesController;
+use App\Http\Controllers\Api\Admin\CompanysizesController;
+use App\Http\Controllers\Api\Admin\CompanytypesController;
 use App\Http\Controllers\Api\Admin\CountriesController;
 use App\Http\Controllers\Api\Admin\Job_typesController;
 use App\Http\Controllers\Api\Admin\LocationsController;
@@ -66,6 +69,7 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::resource('Admin/experience_level', experience_levelController::class);
     Route::resource('Admin/locations', LocationsController::class);
     Route::resource('Admin/country', CountriesController::class);
-
+    Route::resource('Admin/companytype', CompanytypesController::class);
+    Route::resource('Admin/companysize', CompanysizesController::class);
     Route::post('logout', [AuthController::class, 'logout']);
 });

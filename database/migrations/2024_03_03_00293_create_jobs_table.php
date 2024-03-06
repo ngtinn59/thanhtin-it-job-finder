@@ -16,6 +16,9 @@ return new class extends Migration
             $table->unsignedBigInteger('users_id');
             $table->unsignedBigInteger('company_id');
             $table->unsignedBigInteger('jobtype_id');
+            $table->unsignedBigInteger('city_id');
+            $table->unsignedBigInteger('country_id');
+
             $table->string('title');
             $table->float('salary');
             $table->string('skills');
@@ -29,6 +32,8 @@ return new class extends Migration
             $table->foreign('users_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('company_id')->references('id')->on('companies')->onDelete('cascade');
             $table->foreign('jobtype_id')->references('id')->on('job_types')->onDelete('cascade');
+            $table->foreign('city_id')->references('id')->on('cities')->onDelete('cascade');
+            $table->foreign('country_id')->references('id')->on('countries')->onDelete('cascade');
 
             $table->timestamps();
         });

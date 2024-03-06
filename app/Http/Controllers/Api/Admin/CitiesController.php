@@ -2,24 +2,24 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
-use App\Models\Country;
+use App\Models\City;
 use App\Http\Controllers\Controller;
-use App\Models\Location;
+use App\Models\Country;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class CountriesController extends Controller
+class CitiesController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $country = Country::all();
+        $city = City::all();
         return response()->json([
             'success'   => true,
             'message'   => "success",
-            "data" => $country
+            "data" => $city
         ]);
     }
 
@@ -29,15 +29,16 @@ class CountriesController extends Controller
     public function store(Request $request)
     {
         $user = auth()->user()->id;
+
         $data = [
-            'users_id' =>$user,
+            'users_id' => $user,
+            'country_id' => $request->input('country_id'),
             'name' => $request->input('name'),
         ];
-
-
         $validator = Validator::make($data, [
             'users_id' => 'required',
             'name' => 'required',
+            'country_id' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -49,44 +50,56 @@ class CountriesController extends Controller
         }
 
         $data = $validator->validated();
-        $country = Country::create($data);
+        $city = City::create($data);
 
         return response()->json([
             'success'   => true,
             'message'   => "success",
-            "data" => $country
+            "data" => $city
         ]);
-
 
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Country $country)
+    public function show(City $city)
     {
         return response()->json([
             'success' => true,
             'message' => 'success',
             'data' => [
-                'name' => $country->name,
+                'name' => $city->name,
             ],
         ]);
+
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Country $country)
+    public function update(Request $request, City $city)
     {
-        //
+
+        $data = $request->all();
+
+
+        $city->update($data);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'City updated successfully',
+            'data' => $city,
+        ]);
+
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Country $country)
+    public function destroy(City $city)
     {
-        //
+        $city->delete();
+
     }
 }

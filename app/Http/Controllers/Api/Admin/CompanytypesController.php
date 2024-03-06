@@ -2,24 +2,23 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
-use App\Models\Country;
+use App\Models\Companytype;
 use App\Http\Controllers\Controller;
-use App\Models\Location;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class CountriesController extends Controller
+class CompanytypesController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $country = Country::all();
+        $companytype = Companytype::all();
         return response()->json([
             'success'   => true,
             'message'   => "success",
-            "data" => $country
+            "data" => $companytype
         ]);
     }
 
@@ -28,15 +27,11 @@ class CountriesController extends Controller
      */
     public function store(Request $request)
     {
-        $user = auth()->user()->id;
         $data = [
-            'users_id' =>$user,
             'name' => $request->input('name'),
         ];
 
-
         $validator = Validator::make($data, [
-            'users_id' => 'required',
             'name' => 'required',
         ]);
 
@@ -49,27 +44,25 @@ class CountriesController extends Controller
         }
 
         $data = $validator->validated();
-        $country = Country::create($data);
+        $companytype = Companytype::create($data);
 
         return response()->json([
             'success'   => true,
             'message'   => "success",
-            "data" => $country
+            "data" => $companytype
         ]);
-
-
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Country $country)
+    public function show(Companytype $companytype)
     {
         return response()->json([
             'success' => true,
             'message' => 'success',
             'data' => [
-                'name' => $country->name,
+                'name' => $companytype->name,
             ],
         ]);
     }
@@ -77,16 +70,25 @@ class CountriesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Country $country)
+    public function update(Request $request, Companytype $companytype)
     {
-        //
+        $data = $request->all();
+
+
+        $companytype->update($data);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Companytype updated successfully',
+            'data' => $companytype,
+        ]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Country $country)
+    public function destroy(Companytype $companytype)
     {
-        //
+        $companytype->delete();
     }
 }

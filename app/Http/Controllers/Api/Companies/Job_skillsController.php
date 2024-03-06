@@ -29,7 +29,7 @@ class Job_skillsController extends Controller
             $job = $company->Job->first();
             if ($job) {
                 $data = [
-                    'job_id' => $job->id,
+                    'job_id' => $request->job_id,
                     'name' => $request->name,
                 ];
 
