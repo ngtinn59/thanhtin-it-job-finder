@@ -81,11 +81,11 @@ class ProfilesController extends Controller
             'gender' => $request->input('gender'),
             'location' => $request->input('location'),
             'website' => $request->input('website'),
-            'image' => $file_name, // Đường dẫn của tập tin ảnh
+            'image' => $file_name,
             'users_id' => auth()->user()->id,
         ];
         // Tạo profile mới trong cơ sở dữ liệu
-        $profile = Profile::create($data);
+        $profile = Profile::update($data);
 
         return response()->json([
             'success'   => true,

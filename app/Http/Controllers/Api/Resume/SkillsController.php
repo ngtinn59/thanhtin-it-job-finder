@@ -40,41 +40,57 @@ class SkillsController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, Validator $validator)
     {
-        $user = User::where("id", auth()->user()->id)->first();
+        $user = auth()->user();
         $profile = $user->profile->first();
-        $profiles_id = $profile->id;
-        $data = [
-            'name' => $request->input('name'),
-            'level' => $request->input('level'),
-            'profiles_id' => $profiles_id
-        ];
 
-        $validator = Validator::make($data, [
-            'name' => 'required',
-            'level' => 'required',
-            'profiles_id' => 'required',
-        ]);
-
-        if ($validator->fails()) {
+        if (!$profile) {
             return response()->json([
                 'success' => false,
-                'message' => 'Validation error',
-                'errors' => $validator->errors(),
+                'message' => 'User does not have a profile',
             ], 400);
         }
 
-        $data = $validator->validated();
-        $skill = Skill::create($data);
+        $profiles_id = $profile->id;
+
+        $data = $request->all();
+
+        $validationRules = [
+//            'skills' => 'required|array'sss
+            'skills.*.name' => 'required|string',
+            'skills.*.level' => 'required|numeric',
+        ];
+
+        $validation = $validator::make($data, $validationRules);
+
+        if ($validation->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation error',
+                'errors' => $validation->errors(),
+            ], 400);
+        }
+
+        // Chuẩn bị dữ liệu cho việc tạo nhiều skill
+        $skillsData = array_map(function ($skill) use ($profiles_id) {
+            return [
+                'name' => $skill['name'],
+                'level' => $skill['level'],
+                'profiles_id' => $profiles_id,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }, $data['skills']);
+
+        // Tạo nhiều skill cùng một lúc
+        Skill::insert($skillsData);
 
         return response()->json([
-            'success'   => true,
-            'message'   => "success",
-            "data" => $skill
+            'success' => true,
+            'message' => "Skills created successfully",
         ]);
     }
-
     /**
      * Display the specified resource.
      */
@@ -121,7 +137,7 @@ class SkillsController extends Controller
         $skill->delete();
         return response()->json([
             'success' => true,
-            'message' => 'Project deleted successfully',
+            'message' => 'Skill deleted successfully',
         ]);
     }
 }

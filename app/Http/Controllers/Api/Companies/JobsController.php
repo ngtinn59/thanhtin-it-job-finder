@@ -52,6 +52,7 @@ class JobsController extends Controller
     {
         $user = auth()->user();
         $company= $user->companies->id;
+
         $data = [
             'users_id' => $user->id,
             'company_id' => $company,
@@ -154,7 +155,6 @@ class JobsController extends Controller
 
     public function jobRecommend(Job $job)
     {
-        // Lấy kỹ năng của công việc hiện tại
         $currentJobSkills = $job->skill->pluck('name')->toArray();
 
         // Lấy tất cả các công việc khác từ cơ sở dữ liệu

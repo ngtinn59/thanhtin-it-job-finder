@@ -22,6 +22,12 @@ class CompaniesController extends Controller
     public function index()
     {
 
+        $company = Company::all();
+        return response()->json([
+            'success' => true,
+            'message' => 'Company locations retrieved successfully.',
+            'company' => $company
+        ], 200);
     }
 
     /**

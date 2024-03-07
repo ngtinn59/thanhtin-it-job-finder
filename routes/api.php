@@ -36,7 +36,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [JobsController::class, 'index']);
+// Jobs
+Route::resource('job', JobsController::class)->only([
+    'index', 'show'
+]);
 
 Route::post('employer/register', [EmployerRegisterController::class, 'employerRegister']);
 Route::post('login', [AuthController::class, 'login']);
@@ -44,9 +47,9 @@ Route::post('register', [AuthController::class, 'register']);
 
 Route::middleware('auth:sanctum')->group( function () {
     //Resume
-    Route::apiResource('profiles', profilesController::class);
-    Route::apiResource('educations', EducationController::class);
-    Route::apiResource('skills', skillsController::class);
+    Route::resource('profile', profilesController::class);
+    Route::resource('educations', EducationController::class);
+    Route::resource('skills', skillsController::class);
     Route::resource('aboutme', AboutmeController::class);
     Route::resource('certificates', CertificatesController::class);
     Route::resource('awards', AwardsController::class);
