@@ -21,17 +21,28 @@ class CompaniesController extends Controller
      */
     public function index()
     {
-        // Assuming 'companyType' and 'companySize' are the relationship methods defined in the Company model
-        $companies = Company::with(['companytype', 'companysize'])->get();
+        $companies = Company::with(['companytype', 'companysize', 'country', 'city'])->get();
         $companiesdata = $companies->map(function ($company) {
             $companyType = optional($company->companytype)->name;
             $companySize = optional($company->companysize)->name;
+            $country = optional($company->country)->name;
+            $city = optional($company->city)->name;
 
             return [
-                'id' => $company->id,
                 'name' => $company->name,
                 'company_type' => $companyType,
-                'company_size' => $companySize
+                'company_size' => $companySize,
+                'country' => $country,
+                'city' => $city,
+
+                'Working_days' => $company->Working_days,
+                'Working_days' => $company->Working_days,
+                'Overtime_policy' => $company->Overtime_policy,
+                'webstie' => $company->webstie,
+                'logo' => $company->logo,
+                'facebook' => $company->facebook,
+                'description' => $company->description,
+                'address' => $company->address
             ];
         });
         return response()->json([

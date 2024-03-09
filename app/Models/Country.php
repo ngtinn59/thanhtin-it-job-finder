@@ -14,4 +14,9 @@ class Country extends Model
     protected $primaryKey = 'id';
 
     protected $guarded = [];
+
+    public  function company()
+    {
+        return $this->hasOne('App\Models\Company', 'country_id', 'id');
+    }
 }

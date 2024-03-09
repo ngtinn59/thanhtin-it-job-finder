@@ -41,4 +41,13 @@ class Company extends Model
         return $this->hasOne(Companysize::class, 'id', 'company_size_id');
     }
 
+    public  function country()
+    {
+        return $this->hasOne(Country::class, 'id', 'country_id');
+    }
+    public  function city()
+    {
+        return $this->hasOne(City::class, 'id', 'city_id');
+    }
+
 }
