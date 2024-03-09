@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api\Resume;
 
 use App\Models\Profile;
 use App\Http\Controllers\Controller;
-use App\Models\Skill;
 use App\Models\User;
 use App\Utillities\Common;
 use Illuminate\Http\Request;
@@ -33,7 +32,6 @@ class ProfilesController extends Controller
             ];
         });
 
-        // Trả về danh sách giáo dục dưới dạng JSON
         return response()->json([
             'success' => true,
             'message' => 'success',
@@ -47,16 +45,13 @@ class ProfilesController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required',
             'title' => 'required',
             'phone' => 'required',
             'email' => 'required',
             'birthday' => 'required',
-            'gender' => 'required',
             'location' => 'required',
             'website' => 'required',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Kiểm tra tập tin ảnh
-//            'users_id' => 'required',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         if ($validator->fails()) {
@@ -84,8 +79,13 @@ class ProfilesController extends Controller
             'image' => $file_name,
             'users_id' => auth()->user()->id,
         ];
-        // Tạo profile mới trong cơ sở dữ liệu
-        $profile = Profile::update($data);
+
+        $profile = Profile::where('users_id', auth()->user()->id)->first();
+        if ($profile) {
+            $profile->update($data);
+        } else {
+            $profile = Profile::create($data);
+        }
 
         return response()->json([
             'success'   => true,
@@ -114,17 +114,7 @@ class ProfilesController extends Controller
     public function update(Request $request, Profile $profile)
     {
 
-        $data = [
-            'name' => $request->input('name'),
-            'title' => $request->input('title'),
-            'phone' => $request->input('phone'),
-            'email' => $request->input('email'),
-            'image' => $request->input('image'),
-            'birthday' => $request->input('birthday'),
-            'gender' => $request->input('gender'),
-            'location' => $request->input('location'),
-            'website' => $request->input('website'),
-        ];
+        $data = $request->all();
 
         $profile->update($data);
 

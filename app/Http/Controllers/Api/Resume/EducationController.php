@@ -18,7 +18,7 @@ class EducationController extends Controller
     public function index()
     {
         $user = User::where("id", auth()->user()->id)->firstOrFail();
-        $profiles = profiles::where("users_id", $user->id)->firstOrFail();
+        $profiles = profile::where("users_id", $user->id)->firstOrFail();
         $educations = educations::where("profiles_id", $profiles->id)->get();
 
         $educationsData = $educations->map(function ($education) {
@@ -58,11 +58,11 @@ class EducationController extends Controller
         ];
 
         $validator = Validator::make($data, [
-            'shcool_name' => 'required',
             'degree' => 'required',
+            'institution' => 'required',
             'start_date' => 'required',
-            'end_date' => 'required',
-            'studying' => 'required',
+            'end_date' => 'required|date|after:start_date',
+            'additionalDetail' => 'required',
             'profiles_id' => 'required',
         ]);
 
@@ -91,7 +91,7 @@ class EducationController extends Controller
     public function show(educations $education)
     {
         $user = User::where("id", auth()->user()->id)->first();
-        $profile = $user->profiles->first();
+        $profile = $user->profile->first();
         if ($education->profiles_id !== $profile->id) {
             return response()->json([
                 'success' => false,
@@ -116,19 +116,7 @@ class EducationController extends Controller
      */
     public function update(Request $request, educations $education)
     {
-        $user = User::where("id", auth()->user()->id)->first();
-        $profile = $user->profiles->first();
-        $profiles_id = $profile->id;
-        $data = [
-            'degree' => $request->input('degree'),
-            'institution' => $request->input('institution'),
-            'start_date' => $request->input('start_date'),
-            'end_date' => $request->input('end_date'),
-            'additionalDetail' => $request->input('additionalDetail'),
-            'profiles_id' => $profiles_id
-        ];
-
-
+        $data = $request->all();
         $education->update($data);
 
         return response()->json([

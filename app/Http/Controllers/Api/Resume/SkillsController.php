@@ -9,6 +9,7 @@ use App\Models\Skill;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class SkillsController extends Controller
@@ -57,7 +58,6 @@ class SkillsController extends Controller
         $data = $request->all();
 
         $validationRules = [
-//            'skills' => 'required|array'sss
             'skills.*.name' => 'required|string',
             'skills.*.level' => 'required|numeric',
         ];
@@ -72,52 +72,63 @@ class SkillsController extends Controller
             ], 400);
         }
 
-        // Chuẩn bị dữ liệu cho việc tạo nhiều skill
-        $skillsData = array_map(function ($skill) use ($profiles_id) {
-            return [
+        // Xóa tất cả kỹ năng hiện có của người dùng
+        $profile->skills()->delete();
+
+        // Chuẩn bị dữ liệu cho việc thêm mới kỹ năng
+        $skillsData = [];
+        foreach ($data['skills'] as $skill) {
+            $skillsData[] = [
                 'name' => $skill['name'],
                 'level' => $skill['level'],
                 'profiles_id' => $profiles_id,
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
-        }, $data['skills']);
+        }
 
-        // Tạo nhiều skill cùng một lúc
+        // Thêm mới các kỹ năng cho người dùng
         Skill::insert($skillsData);
 
         return response()->json([
             'success' => true,
-            'message' => "Skills created successfully",
+            'message' => "Skills updated successfully",
         ]);
     }
-    /**
-     * Display the specified resource.
-     */
+
+
+
     public function show(Skill $skill)
     {
-        $user = User::where("id", auth()->user()->id)->first();
-        $profile = $user->profile->first();
+        $profileId = auth()->user()->profile->first()->id;
 
-        if ($skill->profiles_id == $profile->id) {
+        if ($skill->profiles_id == $profileId) {
             return response()->json([
                 'success' => true,
                 'message' => 'success',
                 'data' => $skill
             ]);
-        } else {
-            return response()->json([
-                'success' => false,
-                'message' => 'fail'
-            ]);
         }
-    }
 
+        return response()->json([
+            'success' => false,
+            'message' => 'fail'
+        ]);
+    }
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, Skill $skill)
     {
+        $user =  auth()->user();
+        $profile = $user->profile->first();
+        if (!$profile) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Profile not found',
+            ], 404);
+        }
+
         $data = $request->all();
 
         $skill->update($data);

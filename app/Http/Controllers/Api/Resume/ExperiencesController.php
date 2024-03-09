@@ -69,8 +69,7 @@ class ExperiencesController extends Controller
                 'errors' => $validator->errors(),
             ], 400);
         }
-
-        $data = $validator->validated();
+       $data = $validator->validated();
         $experience = Experience::create($data);
 
         return response()->json([
@@ -86,7 +85,7 @@ class ExperiencesController extends Controller
     public function show(Experience $experience)
     {
         $user = User::where("id", auth()->user()->id)->first();
-        $profile = $user->profiles->first();
+        $profile = $user->profile->first();
         if ($experience->profiles_id !== $profile->id) {
             return response()->json([
                 'success' => false,
@@ -112,13 +111,7 @@ class ExperiencesController extends Controller
      */
     public function update(Request $request, Experience $experience)
     {
-        $data = [
-            'position' => $request->position,
-            'company' => $request->company,
-            'start_date' => $request->start_date,
-            'end_date' => $request->end_date,
-            'responsibilities' => $request->responsibilities,
-        ];
+        $data = $request->all();
 
 
         $experience->update($data);

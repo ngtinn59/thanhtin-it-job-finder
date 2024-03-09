@@ -46,20 +46,19 @@ Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [AuthController::class, 'register']);
 
 Route::middleware('auth:sanctum')->group( function () {
-    //Resume
     Route::resource('profile', profilesController::class);
-    Route::resource('educations', EducationController::class);
-    Route::resource('skills', skillsController::class);
-    Route::resource('aboutme', AboutmeController::class);
-    Route::resource('certificates', CertificatesController::class);
-    Route::resource('awards', AwardsController::class);
-    Route::resource('projects', ProjectsController::class);
-    Route::resource('getresume', GetResumeController::class);
+    Route::resource('profiles/educations', EducationController::class);
+    Route::resource('profiles/skills', skillsController::class);
+    Route::resource('profiles/aboutme', AboutmeController::class);
+    Route::resource('profiles/certificates', CertificatesController::class);
+    Route::resource('profiles/awards', AwardsController::class);
+    Route::resource('profiles/projects', ProjectsController::class);
+    Route::resource('profiles/getresume', GetResumeController::class);
+    Route::apiResource('profiles/experiences', ExperiencesController::class);
 
 
     //Company
     Route::resource('companies', CompaniesController::class);
-    Route::apiResource('experiences', ExperiencesController::class);
     Route::resource('companies/location', CompanyLocationsController::class);
     Route::post('/companies/logo', [CompaniesController::class, 'logo'])->name('logo');
 

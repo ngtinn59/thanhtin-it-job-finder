@@ -26,8 +26,8 @@ class AwardsController extends Controller
             return [
                 'id' => $awards->id,
                 'title' => $awards->title,
-                'provider' => $awards->name,
-                'issueDate' => $awards->date,
+                'provider' => $awards->provider,
+                'issueDate' => $awards->issueDate,
                 'description' => $awards->description,
             ];
         });
@@ -91,7 +91,7 @@ class AwardsController extends Controller
     {
         // Check if the award belongs to the authenticated user
         $user = User::where("id", auth()->user()->id)->first();
-        $profile = $user->profiles->first();
+        $profile = $user->profile->first();
         if ($award->profiles_id !== $profile->id) {
             return response()->json([
                 'success' => false,
@@ -104,8 +104,8 @@ class AwardsController extends Controller
             'message' => 'success',
             'data' => [
                 'title' => $award->title,
-                'name' => $award->name,
-                'date' => $award->date,
+                'provider' => $award->provider,
+                'issueDate' => $award->issueDate,
                 'description' => $award->description,
             ],
         ]);
@@ -116,12 +116,7 @@ class AwardsController extends Controller
      */
     public function update(Request $request, Award $award)
     {
-        $data = [
-            'title' => $request->title,
-            'provider' => $request->provider,
-            'issueDate' => $request->issueDate,
-            'description' => $request->description,
-        ];
+        $data = $request->all();
 
 
         $award->update($data);

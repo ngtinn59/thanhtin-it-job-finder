@@ -118,13 +118,7 @@ class CertificatesController extends Controller
      */
     public function update(Request $request, Certificate $certificate)
     {
-        $data = [
-            'title' => $request->description,
-            'provider' => $request->provider,
-            'issueDate' => $request->issueDate,
-            'description' => $request->description,
-            'certificateUrl' => $request->certificateUrl
-        ];
+        $data = $request->all();
 
 
         $certificate->update($data);
