@@ -13,4 +13,6 @@ class Company_size extends Model
     protected $primaryKey = 'id';
     protected $guarded = [];
 
+
+
 }

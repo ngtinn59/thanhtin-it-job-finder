@@ -21,12 +21,23 @@ class CompaniesController extends Controller
      */
     public function index()
     {
+        // Assuming 'companyType' and 'companySize' are the relationship methods defined in the Company model
+        $companies = Company::with(['companytype', 'companysize'])->get();
+        $companiesdata = $companies->map(function ($company) {
+            $companyType = optional($company->companytype)->name;
+            $companySize = optional($company->companysize)->name;
 
-        $company = Company::all();
+            return [
+                'id' => $company->id,
+                'name' => $company->name,
+                'company_type' => $companyType,
+                'company_size' => $companySize
+            ];
+        });
         return response()->json([
             'success' => true,
-            'message' => 'Company locations retrieved successfully.',
-            'company' => $company
+            'message' => 'Company details retrieved successfully.',
+            'companies' => $companiesdata
         ], 200);
     }
 
@@ -35,10 +46,53 @@ class CompaniesController extends Controller
      */
     public function store(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'company_size_id' => 'required',
+            'company_type_id' => 'required',
+            'name' => 'required',
+            'Working_days' => 'required',
+            'Overtime_policy' => 'required',
+            'webstie' => 'required',
+            'logo' => 'required',
+            'facebook' => 'required',
+            'description' => 'required',
+        ]);
 
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation error',
+                'errors' => $validator->errors(),
+            ], 400);
+        }
 
+        $data = $request->only([
+            'company_size_id', 'company_type_id', 'name', 'Working_days',
+            'Overtime_policy', 'webstie', 'logo', 'facebook', 'description'
+        ]);
+
+        // Upload logo
+        $file = $request->file('logo');
+        $path = public_path('uploads/images');
+        $file_name = Common::uploadFile($file, $path);
+
+        $data['logo'] = $file_name;
+
+        $company = Company::where('users_id', auth()->user()->id)->first();
+
+        if ($company) {
+            $company->update($data);
+        } else {
+            $data['users_id'] = auth()->user()->id;
+            $company = Company::create($data);
+        }
+
+        return response()->json([
+            'success'   => true,
+            'message'   => "success update",
+            "data" => $company
+        ]);
     }
-
     /**
      * Display the specified resource.
      */
@@ -65,22 +119,6 @@ class CompaniesController extends Controller
     public function update(Request $request, Company $company)
     {
 
-        Company::where('id', $company->id)->update([
-            'name' => $request->input('name'),
-            'company_size' => $request->input('company_size'),
-            'company_type' => $request->input('company_type'),
-            'Working_days' => $request->input('Working_days'),
-            'Overtime_policy' => $request->input('Overtime_policy'),
-            'webstie' => $request->input('webstie'),
-            'facebook' => $request->input('facebook'),
-            'description' => $request->input('description'),
-        ]);
-
-        return response()->json([
-            'success'   => true,
-            'message'   => "success update",
-            "data" => $company
-        ]);
     }
 
     /**

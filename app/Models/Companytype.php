@@ -12,4 +12,9 @@ class Companytype extends Model
 
     protected $primaryKey = 'id';
     protected $guarded = [];
+
+    public function company()
+    {
+        return $this->hasOne(Company::class,'company_size_id','id');
+    }
 }

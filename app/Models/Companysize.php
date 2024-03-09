@@ -11,4 +11,10 @@ class Companysize extends Model
     protected $table = 'company_sizes';
 
     protected $primaryKey = 'id';
-    protected $guarded = [];}
+    protected $guarded = [];
+
+    public function company()
+    {
+        return $this->hasOne(Company::class,'company_size_id','id');
+    }
+}
