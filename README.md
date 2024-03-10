@@ -4,11 +4,11 @@
 [****Installation****
 ]()
 * Clone the repository.
-* Run composer install.
+* Run `composer install`.
 * Copy .env.example to .env.
-* Generate a secure key in the .env file by running php artisan key:generate.
+* Generate a secure key in the .env file by running **`php artisan key:generate`**.
 
-[Features]
+[**Features**]
 
 * **Register**: Allow users to create new accounts.
 * **Login**: Enable users to log in to their accounts.
