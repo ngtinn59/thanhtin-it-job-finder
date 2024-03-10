@@ -34,8 +34,6 @@ class CompaniesController extends Controller
                 'company_size' => $companySize,
                 'country' => $country,
                 'city' => $city,
-
-                'Working_days' => $company->Working_days,
                 'Working_days' => $company->Working_days,
                 'Overtime_policy' => $company->Overtime_policy,
                 'webstie' => $company->webstie,

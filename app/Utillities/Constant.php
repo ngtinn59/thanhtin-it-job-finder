@@ -29,9 +29,6 @@ class Constant
 
 
 
-    public  static $dates = [
-        self::start_date => 'start-date',
-        self::end_date => 'end-date',
-    ];
+
 
 }

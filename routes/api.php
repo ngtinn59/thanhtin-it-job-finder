@@ -61,6 +61,10 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::resource('companies', CompaniesController::class);
     Route::resource('companies/location', CompanyLocationsController::class);
 
+
+    //Apply
+    Route::resource('apply', ApplyController::class);
+
     //Jobs
     Route::resource('job/skill', Job_skillsController::class);
     Route::resource('job', JobsController::class);
