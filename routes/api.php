@@ -63,7 +63,12 @@ Route::middleware('auth:sanctum')->group( function () {
 
 
     //Apply
-    Route::resource('apply', ApplyController::class);
+
+    Route::post('employer/register', [EmployerRegisterController::class, 'employerRegister']);
+
+    Route::post('/jobs/{id}/apply', [JobsController::class, 'apply']);
+
+    Route::get('/jobs/applicants', [JobsController::class, 'applicant']);
 
     //Jobs
     Route::resource('job/skill', Job_skillsController::class);

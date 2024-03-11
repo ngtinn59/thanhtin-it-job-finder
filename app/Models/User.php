@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
 use Laravel\Sanctum\HasApiTokens;
 
 
@@ -61,5 +62,21 @@ class User extends Authenticatable
     public function companies()
     {
         return $this->hasOne(Company::class,'users_id','id');
+    }
+
+    public function checkApplication(){
+        return DB::table('job_users')->where('users_id', auth()->user()->id)->where('job_id', $this->id)->exists();
+    }
+
+    public function favorites(){
+        return $this->belongsToMany(Job::class, 'favorites', 'job_id', 'users_id')->withTimestamps();
+    }
+
+    public function checkSaved(){
+        return DB::table('favorites')->where('users_id', auth()->user()->id)->where('job_id', $this->id)->exists();
+    }
+
+    public function job(){
+        return $this->hasMany(Job::class,'users_id','id');
     }
 }

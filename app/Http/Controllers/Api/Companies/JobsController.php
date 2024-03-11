@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\Api\Companies;
 
+use App\Mail\JobApplied;
 use App\Models\aboutme;
 use App\Models\Job;
 use App\Http\Controllers\Controller;
 use App\Models\Jobtype;
+use Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class JobsController extends Controller
@@ -57,6 +60,8 @@ class JobsController extends Controller
             'users_id' => $user->id,
             'company_id' => $company,
             'jobtype_id' => $request->jobtype_id,
+            'city_id' => $request->city_id,
+
             'title' => $request->title,
             'salary' => $request->salary,
             'status' => $request->status,
@@ -73,6 +78,8 @@ class JobsController extends Controller
             'users_id' => 'required',
             'company_id' => 'required',
             'jobtype_id' => 'required',
+            'city_id' => 'required',
+
             'title' => 'required',
             'salary' => 'required',
             'status' => 'required',
@@ -172,6 +179,64 @@ class JobsController extends Controller
         });
 
         return $recommendedJobs;
+    }
+
+    public function apply(Request $request, $id) {
+        $job = Job::find($id);
+        if (!$job) {
+            return response()->json(['message' => 'Công việc không tồn tại.'], 404);
+        }
+
+        $user = Auth::guard('sanctum')->user();
+
+        if (!$user) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+
+        if ($job->users()->where('users.id', $user->id)->exists()) {
+            return response()->json(['message' => 'Bạn đã ứng tuyển công việc này rồi.'], 409);
+        }
+
+        // Gửi email trước khi trả về phản hồi
+        Mail::to($user->email)->send(new JobApplied($job));
+
+        // Thực hiện thêm người dùng vào danh sách ứng tuyển của công việc
+        $job->users()->attach($user->id);
+
+        return response()->json(['message' => 'Ứng tuyển công việc thành công.'], 200);
+    }
+
+    public function destroyApplication($id) {
+        $job = Job::find($id);
+        if (!$job) {
+            return response()->json(['message' => 'Công việc không tồn tại.'], 404);
+        }
+
+        $user = Auth::guard('sanctum')->user();
+
+        if (!$user) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+
+        $job->users()->detach($user->id);
+
+        return response()->json(['message' => 'Xóa ứng tuyển của công việc.'], 200);
+    }
+
+    public function applicant()
+    {
+        // Xác định người dùng hiện tại đã đăng nhập chưa
+        if (!Auth::check()) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+
+        // Lấy người dùng hiện tại
+        $user = Auth::user();
+
+        // Lọc các công việc mà người dùng đã ứng tuyển
+        $applicants = $user->job()->get();
+
+        return response()->json(['applicants' => $applicants], 200);
     }
 
 

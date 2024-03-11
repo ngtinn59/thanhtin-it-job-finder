@@ -28,15 +28,20 @@ class Job extends Model
         return $this->hasMany(Jobtype::class,'id','id');
     }
 
-    public function checkSaved(){
-        return DB::table('favorites')->where('user_id', auth()->user()->id)->where('job_id', $this->id)->exists();
-    }
+//    public function checkSaved(){
+//        return DB::table('favorites')->where('user_id', auth()->user()->id)->where('job_id', $this->id)->exists();
+//    }
+//
+//    public function favorites(){
+//        return $this->belongsToMany(Job::class, 'favorites', 'job_id', 'user_id')->withTimestamps();
+//    }
+//    public function checkApplication(){
+//        return DB::table('job_users')->where('user_id', auth()->user()->id)->where('job_id', $this->id)->exists();
+//    }
 
-    public function favorites(){
-        return $this->belongsToMany(Job::class, 'favorites', 'job_id', 'user_id')->withTimestamps();
-    }
-    public function checkApplication(){
-        return DB::table('job_user')->where('user_id', auth()->user()->id)->where('job_id', $this->id)->exists();
+
+    public function users(){
+        return $this->belongsToMany(User::class)->withTimestamps();
     }
 
 }
