@@ -36,18 +36,7 @@ class JobApplied extends Mailable
 
 
         // Kiểm tra xem công ty tồn tại và có email không
-        if ($company && $company->email) {
-            // Nếu có email của công ty, sử dụng nó trong phương thức from()
-            return $this->from($company->email, $company->name)
-                ->subject('Custom Subject')
-                ->view('emails.job_applied')
-                ->with([
-                    'jobTitle' => $job->title,
-                    'userName' => Auth::user()->name,
-                ]);
-        } else {
-            // Nếu không có email của công ty, sử dụng một giá trị mặc định hoặc xử lý theo ý muốn của bạn
-            // Ở đây là một ví dụ sử dụng email mặc định
+
             return $this->from('your_email@example.com', 'Your Name')
                 ->subject('Custom Subject')
                 ->view('emails.job_applied')
@@ -56,7 +45,6 @@ class JobApplied extends Mailable
                     'userName' => Auth::user()->name,
                 ]);
         }
-    }
 
 
 }

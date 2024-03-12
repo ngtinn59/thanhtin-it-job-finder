@@ -18,13 +18,12 @@ return new class extends Migration
             $table->unsignedBigInteger('jobtype_id');
             $table->unsignedBigInteger('city_id');
 
-            $table->string('title');
+            $table->text('title');
             $table->float('salary');
-            $table->string('skills');
             $table->integer('status');
             $table->integer('featured');
-            $table->string('address');
-            $table->string('description');
+            $table->text('address');
+            $table->text('description');
             $table->text('skill_experience');
             $table->text('benefits');
             $table->date('last_date');

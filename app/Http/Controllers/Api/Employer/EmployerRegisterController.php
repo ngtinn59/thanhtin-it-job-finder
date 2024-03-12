@@ -14,7 +14,7 @@ class EmployerRegisterController extends Controller
 {
     public function employerRegister(Request $request)
     {
-        $validatedData = $request->validate([
+        $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|unique:users,email|max:255',
             'password' => 'required|string|min:8|max:255',
@@ -22,26 +22,40 @@ class EmployerRegisterController extends Controller
             'city_id' => 'required',
         ]);
 
-        $user = User::create([
-            'name'         => $validatedData['name'],
-            'email'        => $validatedData['email'],
-            'account_type' => Constant::user_level_employer,
-            'status'       => Constant::user_status_active,
-            'password'     => Hash::make($validatedData['password']),
-        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation error',
+                'errors' => $validator->errors(),
+            ], 400);
+        }
 
-        Company::create([
-            'users_id'   => $user->id,
-            'country_id' => $validatedData['country_id'],
-            'city_id'    => $validatedData['city_id'],
-            'name'       => $validatedData['name'],
-        ]);
+        $validatedData = $validator->validated();
 
-        $token = $user->createToken('auth_token')->plainTextToken;
+        try {
+            $user = User::create([
+                'name'         => $validatedData['name'],
+                'email'        => $validatedData['email'],
+                'account_type' => Constant::user_level_employer,
+                'status'       => Constant::user_status_active,
+                'password'     => Hash::make($validatedData['password']),
+            ]);
 
-        return response()->json([
-            'access_token' => $token,
-            'token_type' => 'Bearer',
-        ]);
-    }
-}
+            Company::create([
+                'users_id'   => $user->id,
+                'country_id' => $validatedData['country_id'],
+                'city_id'    => $validatedData['city_id'],
+                'name'       => $validatedData['name'], // Assuming company name should be the same as user's name.
+            ]);
+
+            $token = $user->createToken('auth_token')->plainTextToken;
+
+            return response()->json([
+                'access_token' => $token,
+                'token_type' => 'Bearer',
+            ]);
+        } catch (\Exception $e) {
+            \Log::error($e->getMessage());
+            return response()->json(['message' => 'Registration failed.'], 500);
+        }
+    }}

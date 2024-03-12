@@ -37,7 +37,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Jobs
-Route::resource('job', JobsController::class)->only([
+Route::resource('/', JobsController::class)->only([
     'index', 'show'
 ]);
 
@@ -64,14 +64,11 @@ Route::middleware('auth:sanctum')->group( function () {
 
     //Apply
 
-    Route::post('employer/register', [EmployerRegisterController::class, 'employerRegister']);
-
     Route::post('/jobs/{id}/apply', [JobsController::class, 'apply']);
 
     Route::get('/jobs/applicants', [JobsController::class, 'applicant']);
 
     //Jobs
-    Route::resource('job/skill', Job_skillsController::class);
     Route::resource('job', JobsController::class);
 
     //Admin

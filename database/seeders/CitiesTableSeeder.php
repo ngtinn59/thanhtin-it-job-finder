@@ -14,10 +14,10 @@ class CitiesTableSeeder extends Seeder
     public function run()
     {
         $cities = [
-            ['users_id' => 2, 'country_id' => 1, 'name' => 'Hà Nội'],
-            ['users_id' => 2, 'country_id' => 1, 'name' => 'TPHCM'],
-            ['users_id' => 2, 'country_id' => 1, 'name' => 'Cần Thơ'],
-            ['users_id' => 2, 'country_id' => 1, 'name' => 'Others'],
+            ['users_id' => 1, 'country_id' => 5, 'name' => 'Hà Nội'],
+            ['users_id' => 1, 'country_id' => 5, 'name' => 'TPHCM'],
+            ['users_id' => 1, 'country_id' => 5, 'name' => 'Cần Thơ'],
+            ['users_id' => 1, 'country_id' => 5, 'name' => 'Others'],
 
         ];
 

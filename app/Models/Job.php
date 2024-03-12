@@ -44,4 +44,8 @@ class Job extends Model
         return $this->belongsToMany(User::class)->withTimestamps();
     }
 
+    public function jobSkills()  : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Jobskill::class,'job_id','id');
+    }
 }

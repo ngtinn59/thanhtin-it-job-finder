@@ -54,41 +54,22 @@ class JobsController extends Controller
     public function store(Request $request)
     {
         $user = auth()->user();
-        $company= $user->companies->id;
+        $company = $user->companies->first(); // Assuming you want the first company of the user.
 
-        $data = [
-            'users_id' => $user->id,
-            'company_id' => $company,
-            'jobtype_id' => $request->jobtype_id,
-            'city_id' => $request->city_id,
-
-            'title' => $request->title,
-            'salary' => $request->salary,
-            'status' => $request->status,
-            'featured' => $request->featured,
-            'description' => $request->description,
-            'skill_experience' => $request->skill_experience,
-            'benefits' => $request->benefits,
-            'address' => $request->address,
-            'last_date' => $request->last_date,
-        ];
-
-
-        $validator = Validator::make($data, [
-            'users_id' => 'required',
-            'company_id' => 'required',
+        $validator = Validator::make($request->all(), [
             'jobtype_id' => 'required',
             'city_id' => 'required',
-
             'title' => 'required',
-            'salary' => 'required',
-            'status' => 'required',
-            'featured' => 'required',
-            'description' =>'required',
-            'last_date' => 'required',
-            'address' => 'required',
-            'skill_experience' => 'required',
-            'benefits' => 'required'
+            'salary' => 'required|numeric',
+            'status' => 'required|integer',
+            'featured' => 'required|integer',
+            'description' =>'required|string',
+            'last_date' => 'required|date',
+            'address' => 'required|string',
+            'skill_experience' => 'required|string',
+            'benefits' => 'required|string',
+            'job_skills' => 'required|array',  // Validate that job_skills is an array.
+            'job_skills.*.name' => 'required|string' // Validate that each skill has a name.
         ]);
 
         if ($validator->fails()) {
@@ -99,16 +80,58 @@ class JobsController extends Controller
             ], 400);
         }
 
-        $data = $validator->validated();
-        $job = Job::create($data);
+        $validatedData = $validator->validated();
 
-        return response()->json([
-            'success'   => true,
-            'message'   => "success",
-            "data" => $job
-        ]);
+        // Add users_id and company_id to the validated data array.
+        $validatedData['users_id'] = $user->id;
+        $validatedData['company_id'] = $company ? $company->id : null;
+
+        // You may want to handle the case when a company is not found.
+        if (!$company) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No company found for the user.',
+            ], 404);
+        }
+
+        // Extract job skills data from the request and remove it from the validated data
+        $jobSkillsData = $validatedData['job_skills'];
+        unset($validatedData['job_skills']);
+
+        try {
+            // Start a transaction
+            \DB::beginTransaction();
+
+            // Create the job
+            $job = Job::create($validatedData);
+
+            // Attach the job skills to the job
+            foreach ($jobSkillsData as $skillData) {
+                $job->jobSkills()->create($skillData);
+            }
+
+            // Commit the transaction
+            \DB::commit();
+
+            return response()->json([
+                'success'   => true,
+                'message'   => "Job and job skills created successfully.",
+                "data" => [
+                    'job' => $job,
+                    'job_skills' => $job->jobSkills
+                ]
+            ]);
+        } catch (\Exception $e) {
+            // Rollback the transaction
+            \DB::rollBack();
+
+            \Log::error($e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Job creation failed.',
+            ], 500);
+        }
     }
-
     /**
      * Display the specified resource.
      */
@@ -137,15 +160,58 @@ class JobsController extends Controller
      */
     public function update(Request $request, Job $job)
     {
-        $data = $request->all();
+        try {
+            // Start a transaction
+            \DB::beginTransaction();
 
-        $job =$job->update($data);
+            // Update the job with the request data
+            $job->update([
+                'jobtype_id' => $request->input('jobtype_id'),
+                'city_id' => $request->input('city_id'),
+                'title' => $request->input('title'),
+                'salary' => $request->input('salary'),
+                'status' => $request->input('status'),
+                'featured' => $request->input('featured'),
+                'description' => $request->input('description'),
+                'last_date' => $request->input('last_date'),
+                'address' => $request->input('address'),
+                'skill_experience' => $request->input('skill_experience'),
+                'benefits' => $request->input('benefits'),
+            ]);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Job updated successfully',
-            'data' => $job,
-        ]);
+            // If 'job_skills' are provided in the request, update job skills accordingly
+            if ($request->has('job_skills')) {
+                $jobSkillsData = $request->input('job_skills');
+                // Delete existing job skills
+                $job->jobSkills()->delete();
+
+                // Attach the updated job skills to the job
+                foreach ($jobSkillsData as $skillData) {
+                    $job->jobSkills()->create($skillData);
+                }
+            }
+
+            // Commit the transaction
+            \DB::commit();
+
+            return response()->json([
+                'success'   => true,
+                'message'   => "Job and job skills updated successfully.",
+                "data" => [
+                    'job' => $job,
+                    'job_skills' => $job->jobSkills
+                ]
+            ]);
+        } catch (\Exception $e) {
+            // Rollback the transaction
+            \DB::rollBack();
+
+            \Log::error($e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Job update failed.',
+            ], 500);
+        }
     }
 
     /**
@@ -181,31 +247,38 @@ class JobsController extends Controller
         return $recommendedJobs;
     }
 
-    public function apply(Request $request, $id) {
+    public function apply(Request $request, $id)
+    {
+        // Tìm công việc dựa trên ID
         $job = Job::find($id);
         if (!$job) {
             return response()->json(['message' => 'Công việc không tồn tại.'], 404);
         }
 
+        // Kiểm tra người dùng đã đăng nhập hay chưa
         $user = Auth::guard('sanctum')->user();
-
         if (!$user) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
 
-        if ($job->users()->where('users.id', $user->id)->exists()) {
+        // Kiểm tra xem người dùng đã ứng tuyển cho công việc này chưa
+        $jobUser = JobUser::where('job_id', $id)->where('user_id', $user->id)->first();
+        if ($jobUser) {
             return response()->json(['message' => 'Bạn đã ứng tuyển công việc này rồi.'], 409);
         }
 
-        // Gửi email trước khi trả về phản hồi
+        // Gửi email thông báo về việc ứng tuyển công việc
         Mail::to($user->email)->send(new JobApplied($job));
 
-        // Thực hiện thêm người dùng vào danh sách ứng tuyển của công việc
-        $job->users()->attach($user->id);
+        // Thêm người dùng vào danh sách ứng tuyển của công việc
+        $jobUser = new JobUser();
+        $jobUser->user_id = $user->id;
+        $jobUser->job_id = $job->id;
+        $jobUser->status = 'pending'; // Bạn có thể cập nhật trạng thái tùy theo yêu cầu của bạn
+        $jobUser->save();
 
         return response()->json(['message' => 'Ứng tuyển công việc thành công.'], 200);
     }
-
     public function destroyApplication($id) {
         $job = Job::find($id);
         if (!$job) {
@@ -230,14 +303,22 @@ class JobsController extends Controller
             return response()->json(['message' => 'Unauthorized'], 401);
         }
 
-        // Lấy người dùng hiện tại
         $user = Auth::user();
 
-        // Lọc các công việc mà người dùng đã ứng tuyển
         $applicants = $user->job()->get();
 
-        return response()->json(['applicants' => $applicants], 200);
+        $response = [
+            'status' => 'success',
+            'data' => [
+                'applicants' => $applicants,
+                'user' => $user
+            ],
+            'message' => 'Data retrieved successfully'
+        ];
+
+        return response()->json($response, 200);
     }
+
 
 
 }
