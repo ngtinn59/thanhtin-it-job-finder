@@ -33,11 +33,14 @@ class LoginRequest extends FormRequest
     public function messages()
     {
         return [
-            'email.required' => 'Vui lòng nhập Email',
-            'password.required' => 'Vui lòng nhập password',
-
+            'email.required' => 'Please enter your email',
+            'email.exists' => 'Email does not exist',
+            'password.required' => 'Please enter your password',
+            'password.exists' => 'Incorrect password',
         ];
     }
+
+
 
     protected function failedValidation(Validator|\Illuminate\Contracts\Validation\Validator $validator)
     {
