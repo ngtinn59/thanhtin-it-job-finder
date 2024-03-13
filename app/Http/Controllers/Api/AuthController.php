@@ -58,9 +58,24 @@ class AuthController extends Controller
     {
         $credentials = $request->only('email', 'password');
 
+        // Check if email exists
+        $user = User::where('email', $credentials['email'])->first();
+
+        if (!$user) {
+            return response()->json([
+                'error' => [
+                    'email' => ['Email does not exist']
+                ],
+                'status_code' => 422
+            ], 422);
+        }
+
+        // Attempt to authenticate user
         if (!Auth::attempt($credentials)) {
             return response()->json([
-                'message' => 'Incorrect Password',
+                'error' => [
+                    'password' => ['Wrong password']
+                ],
                 'status_code' => 401
             ], 401);
         }
@@ -79,7 +94,6 @@ class AuthController extends Controller
             'token_type' => 'Bearer',
         ]);
     }
-
     public function logout(Request $request) {
             $request->user()->tokens()->delete();
         return response()->json(['message' => 'Logout Sucess'], 200);
