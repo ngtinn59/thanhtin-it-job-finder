@@ -346,6 +346,17 @@ class JobsController extends Controller
         return response()->json(['message' => 'Xử lí đơn ứng tuyển thành công.'], 200);
     }
 
+    public function viewApplicants($jobId)
+    {
+        $job = Job::find($jobId);
+        if (!$job) {
+            return response()->json(['message' => 'Công việc không tồn tại.'], 404);
+        }
 
+        $applicants = $job->users()->withPivot('status')->get();
+
+        // You can customize the response format as needed
+        return response()->json(['job' => $job, 'applicants' => $applicants], 200);
+    }
 
 }
