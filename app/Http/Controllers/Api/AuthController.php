@@ -45,6 +45,7 @@ class AuthController extends Controller
                 'access_token' => $token,
                 'token_type' => 'Bearer',
                 'user' => $user, // Optionally, include user information
+                'status_code' => 200,
                 'message' => 'Registration successful.'
             ]);
         } catch (\Exception $e) {
