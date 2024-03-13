@@ -24,6 +24,7 @@ class JobsController extends Controller
 
         $jobsData = $jobs->map(function ($job) {
             return [
+                'id' => $job->id,
                 'title' => $job->title,
                 'company' => $job->company ? $job->company->name : null,
                 'salary' => $job->salary,
@@ -180,14 +181,21 @@ class JobsController extends Controller
             ]);
 
             // If 'job_skills' are provided in the request, update job skills accordingly
+// If 'job_skills' are provided in the request, update job skills accordingly
             if ($request->has('job_skills')) {
                 $jobSkillsData = $request->input('job_skills');
-                // Delete existing job skills
-                $job->jobSkills()->delete();
+                $existingSkills = $job->jobSkills()->pluck('name')->toArray();
+
+                // Delete job skills that are not in the updated list
+                foreach ($existingSkills as $existingSkill) {
+                    if (!in_array($existingSkill, array_column($jobSkillsData, 'name'))) {
+                        $job->jobSkills()->where('name', $existingSkill)->delete();
+                    }
+                }
 
                 // Attach the updated job skills to the job
                 foreach ($jobSkillsData as $skillData) {
-                    $job->jobSkills()->create($skillData);
+                    $job->jobSkills()->updateOrCreate(['name' => $skillData['name']], $skillData);
                 }
             }
 
@@ -249,33 +257,33 @@ class JobsController extends Controller
 
     public function apply(Request $request, $id)
     {
-        // Tìm công việc dựa trên ID
         $job = Job::find($id);
         if (!$job) {
             return response()->json(['message' => 'Công việc không tồn tại.'], 404);
         }
 
-        // Kiểm tra người dùng đã đăng nhập hay chưa
         $user = Auth::guard('sanctum')->user();
         if (!$user) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
 
-        // Kiểm tra xem người dùng đã ứng tuyển cho công việc này chưa
-        $jobUser = JobUser::where('job_id', $id)->where('user_id', $user->id)->first();
-        if ($jobUser) {
+        if ($job->users()->where('users.id', $user->id)->exists()) {
             return response()->json(['message' => 'Bạn đã ứng tuyển công việc này rồi.'], 409);
         }
 
-        // Gửi email thông báo về việc ứng tuyển công việc
-        Mail::to($user->email)->send(new JobApplied($job));
+        // Process the CV file
+        if ($request->hasFile('cv')) {
+            $cv = $request->file('cv');
+            $cvFileName = time() . '_' . $cv->getClientOriginalName();
+            $cv->storeAs('cv', $cvFileName); // Store the CV file in storage/cv directory
+        } else {
+            $cvFileName = null;
+        }
 
-        // Thêm người dùng vào danh sách ứng tuyển của công việc
-        $jobUser = new JobUser();
-        $jobUser->user_id = $user->id;
-        $jobUser->job_id = $job->id;
-        $jobUser->status = 'pending'; // Bạn có thể cập nhật trạng thái tùy theo yêu cầu của bạn
-        $jobUser->save();
+        // Gửi email thông báo về việc ứng tuyển công việc
+        Mail::to($user->email)->send(new JobApplied($job, $user, $cvFileName));
+
+        $job->users()->attach($user->id, ['status' => 'pending', 'cv' => $cvFileName]);
 
         return response()->json(['message' => 'Ứng tuyển công việc thành công.'], 200);
     }
@@ -298,25 +306,44 @@ class JobsController extends Controller
 
     public function applicant()
     {
-        // Xác định người dùng hiện tại đã đăng nhập chưa
-        if (!Auth::check()) {
+        $user = Auth::guard('sanctum')->user();
+        if (!$user) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
 
-        $user = Auth::user();
+        $appliedJobs = $user->jobs()->withPivot('status')->get();
+        return response()->json($appliedJobs, 200);
+    }
 
-        $applicants = $user->job()->get();
 
-        $response = [
-            'status' => 'success',
-            'data' => [
-                'applicants' => $applicants,
-                'user' => $user
-            ],
-            'message' => 'Data retrieved successfully'
-        ];
+    public function processApplication(Request $request, $jobId, $userId)
+    {
+        $job = Job::find($jobId);
+        if (!$job) {
+            return response()->json(['message' => 'Công việc không tồn tại.'], 404);
+        }
 
-        return response()->json($response, 200);
+        $user = User::find($userId);
+        if (!$user) {
+            return response()->json(['message' => 'Người dùng không tồn tại.'], 404);
+        }
+
+        $status = $request->input('status');
+        if (!in_array($status, ['approved', 'rejected'])) {
+            return response()->json(['message' => 'Trạng thái không hợp lệ.'], 400);
+        }
+
+        // Update the status of the application
+        $job->users()->updateExistingPivot($user->id, ['status' => $status]);
+
+        // Send notification email to the applicant
+        if ($status === 'approved') {
+            Mail::to($user->email)->send(new ApplicationApproved($job, $user));
+        } elseif ($status === 'rejected') {
+            Mail::to($user->email)->send(new ApplicationRejected($job, $user));
+        }
+
+        return response()->json(['message' => 'Xử lí đơn ứng tuyển thành công.'], 200);
     }
 
 

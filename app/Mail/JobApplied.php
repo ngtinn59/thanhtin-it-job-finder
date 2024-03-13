@@ -28,23 +28,20 @@ class JobApplied extends Mailable
      */
     public function build()
     {
-        // Lấy công việc từ đối tượng $this->job
         $job = $this->job;
-
-        // Lấy công ty từ công việc
-        $company = $job->users;
-
-
-        // Kiểm tra xem công ty tồn tại và có email không
-
-            return $this->from('your_email@example.com', 'Your Name')
-                ->subject('Custom Subject')
-                ->view('emails.job_applied')
-                ->with([
-                    'jobTitle' => $job->title,
-                    'userName' => Auth::user()->name,
-                ]);
-        }
-
+        $company = $job->company;
+        $jobtype = $job->jobtype->first()->name;
+        return $this->from('ngtin590@gmail.com', $company->name)
+            ->subject('Xác nhận tuyển dụng')
+            ->view('emails.job_applied')
+            ->with([
+                'jobTitle' => $job->title,
+                'companyName' => $company->name,
+                'address' => $job->address,
+                'salary' => $job->salary,
+                'jobtype' => $jobtype,
+                'userName' => Auth::user()->name,
+            ]);
+    }
 
 }
