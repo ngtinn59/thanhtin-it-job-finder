@@ -18,16 +18,16 @@ class GetResumeController extends Controller
         $profile = profile::where('users_id', $user->id)->get();
         $profilesData = $profile->map(function ($profile) {
             return [
-//                'title' => $profile->title,
-//                'name' => $profile->name,
-//                'phone' => $profile->phone,
-//                'email' => $profile->email,
-//                'date_of_birth' => $profile->date_of_birth,
-//                'gender' => $profile->gender === 1 ? 'Male' : 'Female',
-//                'address' => $profile->address,
-//                'portfolio_url' => $profile->portfolio_url,
-//                'github_url' => $profile->github_url,
-//                'linkedin_url' => $profile->linkedin_url,
+               'title' => $profile->title,
+               'name' => $profile->name,
+               'phone' => $profile->phone,
+               'email' => $profile->email,
+               'date_of_birth' => $profile->date_of_birth,
+               'gender' => $profile->gender === 1 ? 'Male' : 'Female',
+               'address' => $profile->address,
+               'portfolio_url' => $profile->portfolio_url,
+               'github_url' => $profile->github_url,
+               'linkedin_url' => $profile->linkedin_url,
                 'aboutme' => $profile->abouts->map(function ($aboutme) {
                     return [
                         'description' => $aboutme->description,

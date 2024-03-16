@@ -54,7 +54,7 @@ class User extends Authenticatable
         return $this->hasMany(company_reviews::class,'users_id','id');
     }
 
-    public function profile()
+    public function profile(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
         return $this->hasOne(profile::class,'users_id','id');
     }

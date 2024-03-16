@@ -39,12 +39,11 @@ class AboutmeController extends Controller
      */
     public function store(Request $request)
     {
-        $user = User::where("id", auth()->user()->id)->first();
+        $user = auth()->user();
         $profile = $user->profile->first();
-        $profiles = $profile->id;
         $data = [
             'description' => $request->input('description'),
-            'profiles_id' => $profiles
+            'profiles_id' => $profile
         ];
 
         $validator = Validator::make($data, [
