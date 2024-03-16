@@ -17,20 +17,21 @@ class AboutmeController extends Controller
      */
     public function index()
     {
-        $user = User::where("id", auth()->user()->id)->firstOrFail();
-        $profiles = profile::where("users_id", $user->id)->firstOrFail();
-        $aboutme = aboutme::where("profiles_id", $profiles->id)->get();
+        $user =  auth()->user();
+        $profile = $user->profile->first();
+        $profile_id = $profile->id;
+        $aboutme = aboutme::where("profiles_id", $profile_id)->get();
         $aboutmeData = $aboutme->map(function ($aboutme) {
             return [
                 'description' => $aboutme->description,
             ];
         });
 
-        // Trả về danh sách giáo dục dưới dạng JSON
         return response()->json([
             'success' => true,
             'message' => 'success',
-            'data' => $aboutmeData
+            'data' => $aboutmeData,
+            'status_code' => 200
         ]);
     }
 
@@ -92,6 +93,7 @@ class AboutmeController extends Controller
             'data' => [
                 'description' => $aboutme->description,
             ],
+            'status_code' => 200
         ]);
     }
 
@@ -124,6 +126,7 @@ class AboutmeController extends Controller
             'success' => true,
             'message' => 'About me updated successfully',
             'data' => $aboutme,
+            'status_code' => 200
         ]);
     }
 
@@ -137,6 +140,7 @@ class AboutmeController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'About me deleted successfully',
+            'status_code' => 200
         ]);
 
     }
