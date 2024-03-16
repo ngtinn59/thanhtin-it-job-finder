@@ -18,9 +18,10 @@ class CertificatesController extends Controller
      */
     public function index()
     {
-        $user = User::where("id", auth()->user()->id)->firstOrFail();
-        $profiles = profile::where("users_id", $user->id)->firstOrFail();
-        $certificate = Certificate::where("profiles_id", $profiles->id)->get();
+        $user =  auth()->user();
+        $profile = $user->profile->first();
+        $profile_id = $profile->id;
+        $certificate = Certificate::where("profiles_id", $profile_id)->get();
         $certificateData = $certificate->map(function ($certificate) {
             return [
                 'title' => $certificate->title,
@@ -35,7 +36,8 @@ class CertificatesController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'success',
-            'data' => $certificateData
+            'data' => $certificateData,
+            'status_code' => 200
         ]);
     }
 

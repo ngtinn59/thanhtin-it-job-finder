@@ -17,7 +17,7 @@ class ProfilesController extends Controller
     public function index()
     {
         $user = User::where("id", auth()->user()->id)->firstOrFail();
-        $profile = profile::where("users_id", $user->id)->get();
+        $profile = Profile::where("users_id", $user->id)->get();
         $profilesData = $profile->map(function ($profile) {
             return [
                 'title' => $profile->title,
@@ -25,7 +25,7 @@ class ProfilesController extends Controller
                 'phone' => $profile->phone,
                 'email' => $profile->email,
                 'birthday' => $profile->birthday,
-                'image' => $profile->image,
+                'image_url' => url('uploads/images/' . $profile->image), // Xây dựng URL của hình ảnh
                 'gender' => $profile->gender == 1 ? 'Male' : 'Female',
                 'location' => $profile->location,
                 'website' => $profile->website,
@@ -35,7 +35,8 @@ class ProfilesController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'success',
-            'data' => $profilesData
+            'data' => $profilesData,
+            'status_code' => 200
         ]);
     }
 

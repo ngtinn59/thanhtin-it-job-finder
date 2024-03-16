@@ -35,7 +35,8 @@ class EducationController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'success',
-            'data' => $educationsData
+            'data' => $educationsData,
+            'status_code' => 200
         ]);
     }
 
@@ -80,7 +81,8 @@ class EducationController extends Controller
         return response()->json([
             'success'   => true,
             'message'   => "success",
-            "data" => $education
+            "data" => $education,
+            'status_code' => 200
         ]);
 
     }
@@ -123,6 +125,7 @@ class EducationController extends Controller
             'success' => true,
             'message' => 'Education updated successfully',
             'data' => $education,
+            'status_code' => 200
         ]);
     }
 
@@ -142,7 +145,8 @@ class EducationController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Education deleted successfully'
+            'message' => 'Education deleted successfully',
+            'status_code' => 200
         ]);
     }
 }
