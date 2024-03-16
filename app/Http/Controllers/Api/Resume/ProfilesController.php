@@ -45,57 +45,69 @@ class ProfilesController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'title' => 'required',
-            'phone' => 'required',
-            'email' => 'required',
-            'birthday' => 'required',
-            'location' => 'required',
-            'website' => 'required',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Validation error',
-                'errors' => $validator->errors(),
-            ], 400);
-        }
-
-        $file = $request->file('image'); // Lấy đối tượng tập tin ảnh từ request
-        $path = public_path('uploads/images'); // Đường dẫn lưu trữ tập tin ảnh
-        $file_name = Common::uploadFile($file, $path); // Gọi phương thức uploadFile từ class Common để tải lên tập tin ảnh
-
-        // Tạo dữ liệu mới với đường dẫn của tập tin ảnh
-        $data = [
-            'name' => $request->input('name'),
-            'title' => $request->input('title'),
-            'phone' => $request->input('phone'),
-            'email' => $request->input('email'),
-            'birthday' => $request->input('birthday'),
-            'gender' => $request->input('gender'),
-            'location' => $request->input('location'),
-            'website' => $request->input('website'),
-            'image' => $file_name,
-            'users_id' => auth()->user()->id,
-        ];
-
         $profile = Profile::where('users_id', auth()->user()->id)->first();
-        if ($profile) {
-            $profile->update($data);
+
+        // Only perform validation if we're creating a new profile
+        if (!$profile) {
+            $validator = Validator::make($request->all(), [
+                'title' => 'required',
+                'phone' => 'required',
+                'email' => 'required',
+                'birthday' => 'required',
+                'location' => 'required',
+                'website' => 'required',
+                'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Validation error',
+                    'errors' => $validator->errors(),
+                ], 400);
+            }
+
+            $file = $request->file('image');
+            $path = public_path('uploads/images');
+            $file_name = Common::uploadFile($file, $path);
+
+            $data = [
+                'name' => $request->input('name'),
+                'title' => $request->input('title'),
+                'phone' => $request->input('phone'),
+                'email' => $request->input('email'),
+                'birthday' => $request->input('birthday'),
+                'gender' => $request->input('gender'),
+                'location' => $request->input('location'),
+                'website' => $request->input('website'),
+                'image' => $file_name,
+                'users_id' => auth()->user()->id,
+            ];
         } else {
-            $profile = Profile::create($data);
+            // If updating, we assume the request only contains fields to be updated
+            $data = $request->all();
+
+            // Optionally handle image file if it's in the request
+            if ($request->hasFile('image')) {
+                $file = $request->file('image');
+                $path = public_path('uploads/images');
+                $data['image'] = Common::uploadFile($file, $path);
+            }
         }
+
+        // Use updateOrCreate to either update the existing profile or create a new one
+        $profile = Profile::updateOrCreate(
+            ['users_id' => auth()->user()->id],
+            $data
+        );
 
         return response()->json([
-            'success'   => true,
-            'message'   => "success",
+            'success' => true,
+            'message' => "Profile saved successfully",
             'data' => $profile->toArray(),
             'status_code' => 200
         ]);
     }
-
     /**
      * Display the specified resource.
      */
