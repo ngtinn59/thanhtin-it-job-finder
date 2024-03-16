@@ -39,11 +39,12 @@ class AboutmeController extends Controller
      */
     public function store(Request $request)
     {
-        $user = auth()->user();
+        $user =  auth()->user();
         $profile = $user->profile->first();
+        $profile_id = $profile->id;
         $data = [
             'description' => $request->input('description'),
-            'profiles_id' => $profile
+            'profiles_id' => $profile_id
         ];
 
         $validator = Validator::make($data, [
@@ -65,7 +66,8 @@ class AboutmeController extends Controller
         return response()->json([
             'success'   => true,
             'message'   => "success",
-            "data" => $aboutme
+            "data" => $aboutme,
+            'status_code' => 200
         ]);
 
     }

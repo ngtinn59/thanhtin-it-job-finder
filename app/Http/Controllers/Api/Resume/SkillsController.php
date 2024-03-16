@@ -93,6 +93,7 @@ class SkillsController extends Controller
         return response()->json([
             'success' => true,
             'message' => "Skills updated successfully",
+            'status_code' => 200
         ]);
     }
 
