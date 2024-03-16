@@ -35,7 +35,8 @@ class ProjectsController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'success',
-            'data' => $projectData
+            'data' => $projectData,
+            'status_code' => 200
         ]);
     }
 
@@ -77,7 +78,8 @@ class ProjectsController extends Controller
         return response()->json([
             'success'   => true,
             'message'   => "success",
-            "data" => $projects
+            "data" => $projects,
+            'status_code' => 200
         ]);
 
     }
@@ -97,7 +99,8 @@ class ProjectsController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'success',
-                'data' => $project
+                'data' => $project,
+                'status_code' => 200
             ]);
         } else {
             return response()->json([
@@ -121,6 +124,7 @@ class ProjectsController extends Controller
             'success' => true,
             'message' => 'Project updated successfully',
             'data' => $project,
+            'status_code' => 200
         ]);
     }
 
@@ -133,6 +137,7 @@ class ProjectsController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Project deleted successfully',
+            'status_code' => 200
         ]);
     }
 }
