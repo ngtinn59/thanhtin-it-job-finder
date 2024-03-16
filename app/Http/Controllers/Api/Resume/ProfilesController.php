@@ -91,7 +91,8 @@ class ProfilesController extends Controller
         return response()->json([
             'success'   => true,
             'message'   => "success",
-            'data' => $profile->toArray()
+            'data' => $profile->toArray(),
+            'status_code' => 200
         ]);
     }
 
@@ -100,11 +101,11 @@ class ProfilesController extends Controller
      */
     public function show(Profile $profile)
     {
-
             return response()->json([
                 'success' => true,
                 'message' => 'success',
-                'data' => $profile
+                'data' => $profile,
+                'status_code' => 200
             ]);
 
     }
@@ -114,15 +115,14 @@ class ProfilesController extends Controller
      */
     public function update(Request $request, Profile $profile)
     {
-
         $data = $request->all();
-
         $profile->update($data);
 
         return response()->json([
             'success' => true,
             'message' => 'Profile me updated successfully',
             'data' => $profile,
+            'status_code' => 200
         ]);
     }
 
@@ -136,6 +136,7 @@ class ProfilesController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Profile me deleted successfully',
+            'status_code' => 200
         ]);
     }
 }
