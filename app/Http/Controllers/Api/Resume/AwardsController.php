@@ -18,9 +18,10 @@ class AwardsController extends Controller
      */
     public function index()
     {
-        $user = User::where("id", auth()->user()->id)->firstOrFail();
-        $profiles = profile::where("users_id", $user->id)->firstOrFail();
-        $awards = Award::where("profiles_id", $profiles->id)->get();
+        $user =  auth()->user();
+        $profile = $user->profile->first();
+        $profile_id = $profile->id;
+        $awards = Award::where("profiles_id", $profile_id)->get();
 
         $awardsData = $awards->map(function ($awards) {
             return [
@@ -36,7 +37,8 @@ class AwardsController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'success',
-            'data' => $awardsData
+            'data' => $awardsData,
+            'status_code' => 200
         ]);
     }
 
@@ -45,13 +47,13 @@ class AwardsController extends Controller
      */
     public function store(Request $request)
     {
-        $user = User::where("id", auth()->user()->id)->first();
+        $user =  auth()->user();
         $profile = $user->profile->first();
-        $profiles = $profile->id;
+        $profile_id = $profile->id;
 
         $data = [
             'title' => $request->input('title'),
-            'profiles_id' =>$profiles,
+            'profiles_id' =>$profile_id,
             'provider' => $request->input('provider'),
             'issueDate' => $request->input('issueDate'),
             'description' => $request->input('description')
@@ -80,7 +82,8 @@ class AwardsController extends Controller
         return response()->json([
             'success'   => true,
             'message'   => "success",
-            "data" => $Award
+            "data" => $Award,
+            'status_code' => 201
         ]);
     }
 
@@ -108,6 +111,7 @@ class AwardsController extends Controller
                 'issueDate' => $award->issueDate,
                 'description' => $award->description,
             ],
+            'status_code' => 200
         ]);
     }
 
@@ -125,6 +129,7 @@ class AwardsController extends Controller
             'success' => true,
             'message' => 'Award me updated successfully',
             'data' => $award,
+            'status_code' => 200
         ]);
     }
 
@@ -137,6 +142,7 @@ class AwardsController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Award me deleted successfully',
+            'status_code' => 200
         ]);
 
     }
