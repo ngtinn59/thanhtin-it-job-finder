@@ -17,9 +17,10 @@ class ExperiencesController extends Controller
      */
     public function index()
     {
-        $user = User::where("id", auth()->user()->id)->firstOrFail();
-        $profiles = profile::where("users_id", $user->id)->firstOrFail();
-        $experience = Experience::where("profiles_id", $profiles->id)->get();
+        $user =  auth()->user();
+        $profile = $user->profile->first();
+        $profile_id = $profile->id;
+        $experience = Experience::where("profiles_id", $profile_id)->get();
         $experienceData = $experience->map(function ($experience) {
             return [
                 'position' => $experience->position,
@@ -33,7 +34,8 @@ class ExperiencesController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'success',
-            'data' => $experienceData
+            'data' => $experienceData,
+            'status_code' => 200
         ]);
     }
 
@@ -75,7 +77,8 @@ class ExperiencesController extends Controller
         return response()->json([
             'success'   => true,
             'message'   => "success",
-            "data" => $experience
+            "data" => $experience,
+            'status_code' => 200
         ]);
     }
 
@@ -103,6 +106,7 @@ class ExperiencesController extends Controller
                 'end_date' => $experience->end_date,
                 'responsibilities' => $experience->responsibilities,
             ],
+            'status_code' => 200
         ]);
     }
 
@@ -120,6 +124,7 @@ class ExperiencesController extends Controller
             'success' => true,
             'message' => 'Experience updated successfully',
             'data' => $experience,
+            'status_code' => 200
         ]);
     }
 
@@ -134,6 +139,7 @@ class ExperiencesController extends Controller
             'success' => true,
             'message' => 'Experience deleted successfully',
             'data' => $experience,
+            'status_code' => 200
         ]);
     }
 }
