@@ -40,9 +40,10 @@ class AboutmeController extends Controller
      */
     public function store(Request $request)
     {
-        $user =  auth()->user();
+        $user = auth()->user();
         $profile = $user->profile->first();
         $profile_id = $profile->id;
+
         $data = [
             'description' => $request->input('description'),
             'profiles_id' => $profile_id
@@ -50,7 +51,7 @@ class AboutmeController extends Controller
 
         $validator = Validator::make($data, [
             'description' => 'required',
-            'profiles_id' => 'required',
+            'profiles_id' => 'required|exists:profiles,id',
         ]);
 
         if ($validator->fails()) {
@@ -62,17 +63,22 @@ class AboutmeController extends Controller
         }
 
         $data = $validator->validated();
-        $aboutme = aboutme::create($data);
+
+        // Update existing record or create a new one
+        $aboutme = Aboutme::updateOrCreate(
+            ['profiles_id' => $profile_id], // Match criteria
+            ['description' => $request->input('description')] // Data to update or create
+        );
+
+        $status_code = $aboutme->wasRecentlyCreated ? 201 : 200; // 201 if created, 200 if updated
 
         return response()->json([
-            'success'   => true,
-            'message'   => "success",
+            'success' => true,
+            'message' => "Operation successful",
             "data" => $aboutme,
-            'status_code' => 200
+            'status_code' => $status_code
         ]);
-
     }
-
     /**
      * Display the specified resource.
      */

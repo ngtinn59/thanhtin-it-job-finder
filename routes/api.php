@@ -49,7 +49,7 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::resource('profile', profilesController::class);
     Route::resource('profiles/educations', EducationController::class);
     Route::resource('profiles/skills', skillsController::class);
-    Route::resource('profiles/aboutme', AboutmeController::class);
+    Route::resource('profiles/about-me', AboutmeController::class);
     Route::resource('profiles/certificates', CertificatesController::class);
     Route::resource('profiles/awards', AwardsController::class);
     Route::resource('profiles/projects', ProjectsController::class);
