@@ -346,17 +346,20 @@ class JobsController extends Controller
         return response()->json(['message' => 'Xử lí đơn ứng tuyển thành công.'], 200);
     }
 
-    public function viewApplicants($jobId)
+    public function viewAppliedJobs()
     {
-        $job = Job::find($jobId);
-        if (!$job) {
-            return response()->json(['message' => 'Công việc không tồn tại.'], 404);
+
+        $user = Auth::id();
+        if (!$user) {
+            return response()->json(['message' => 'Người dùng không tồn tại.'], 404);
         }
 
-        $applicants = $job->users()->withPivot('status')->get();
+        $appliedJobs = Job::whereHas('users', function ($query) use ($user) {
+            $query->where('users.id', $user);
+        })->with('company')->get();
 
         // You can customize the response format as needed
-        return response()->json(['job' => $job, 'applicants' => $applicants], 200);
+        return response()->json(['user' => $user, 'applied_jobs' => $appliedJobs], 200);
     }
 
 }
