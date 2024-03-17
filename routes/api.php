@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\Companies\CompanyLocationsController;
 use App\Http\Controllers\Api\Companies\Job_skillsController;
 use App\Http\Controllers\Api\Companies\JobsController;
 use App\Http\Controllers\Api\Employer\EmployerRegisterController;
+use App\Http\Controllers\Api\Job\JobApplicationController;
 use App\Http\Controllers\Api\Recruitments\experience_levelController;
 use App\Http\Controllers\Api\Resume\AboutmeController;
 use App\Http\Controllers\Api\Resume\AwardsController;
@@ -49,12 +50,12 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::resource('profile', profilesController::class);
     Route::resource('profiles/educations', EducationController::class);
     Route::resource('profiles/skills', skillsController::class);
-    Route::resource('profiles/about-me', AboutmeController::class);
+    Route::resource('profiles/aboutMe', AboutmeController::class);
     Route::resource('profiles/certificates', CertificatesController::class);
     Route::resource('profiles/awards', AwardsController::class);
     Route::resource('profiles/projects', ProjectsController::class);
-    Route::resource('profiles/getresume', GetResumeController::class);
-    Route::apiResource('profiles/experiences', ExperiencesController::class);
+    Route::resource('profiles/getResume', GetResumeController::class);
+    Route::resource('profiles/experiences', ExperiencesController::class);
 
 
     //Company
@@ -65,18 +66,20 @@ Route::middleware('auth:sanctum')->group( function () {
     //Apply
 
     Route::post('/jobs/{id}/apply', [JobsController::class, 'apply']);
-
     Route::get('/jobs/applicants', [JobsController::class, 'applicant']);
 
     //Jobs
     Route::resource('job', JobsController::class);
 
+    //JobAdmin
+
+    Route::get('/applications', [JobApplicationController::class, 'index']);
     //Admin
-    Route::resource('Admin/job_types', Job_typesController::class);
-    Route::resource('Admin/experience_level', experience_levelController::class);
+    Route::resource('Admin/jobTypes', Job_typesController::class);
+    Route::resource('Admin/experienceLevel', experience_levelController::class);
     Route::resource('Admin/locations', LocationsController::class);
     Route::resource('Admin/country', CountriesController::class);
-    Route::resource('Admin/companytype', CompanytypesController::class);
-    Route::resource('Admin/companysize', CompanysizesController::class);
+    Route::resource('Admin/companyType', CompanytypesController::class);
+    Route::resource('Admin/companySize', CompanysizesController::class);
     Route::post('logout', [AuthController::class, 'logout']);
 });

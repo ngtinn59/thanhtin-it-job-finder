@@ -48,4 +48,11 @@ class Job extends Model
     {
         return $this->hasMany(Jobskill::class,'job_id','id');
     }
+
+    // Trong mô hình Job
+    public function applicants()
+    {
+        // Sử dụng tên mô hình User và tên bảng trung gian là 'job_user'
+        return $this->belongsToMany(User::class, 'job_user');
+    }
 }
