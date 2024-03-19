@@ -3,10 +3,7 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Content;
-use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
 class ApplicationRejected extends Mailable
@@ -18,36 +15,18 @@ class ApplicationRejected extends Mailable
      */
     public function __construct()
     {
-        //
+        // Bạn có thể truyền dữ liệu vào constructor nếu cần
     }
 
     /**
-     * Get the message envelope.
-     */
-    public function envelope(): Envelope
-    {
-        return new Envelope(
-            subject: 'Application Rejected',
-        );
-    }
-
-    /**
-     * Get the message content definition.
-     */
-    public function content(): Content
-    {
-        return new Content(
-            view: 'view.name',
-        );
-    }
-
-    /**
-     * Get the attachments for the message.
+     * Build the message.
      *
-     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
+     * @return $this
      */
-    public function attachments(): array
+    public function build()
     {
-        return [];
+        return $this->subject('Application Rejected')
+            ->view('emails.application_rejected');
+        // Nếu bạn có dữ liệu để truyền vào view, sử dụng ->with(['key' => $value])
     }
 }

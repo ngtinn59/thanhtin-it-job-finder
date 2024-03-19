@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers\Api\Companies;
 
-use App\Mail\JobApplied;
-use App\Models\aboutme;
-use App\Models\Job;
 use App\Http\Controllers\Controller;
-use App\Models\Jobtype;
+use App\Mail\JobApplied;
+use App\Models\Job;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -21,7 +19,6 @@ class JobsController extends Controller
     {
         $jobs = Job::with('jobtype', 'skill', 'Company')->paginate(5);
 
-
         $jobsData = $jobs->map(function ($job) {
             return [
                 'id' => $job->id,
@@ -32,7 +29,7 @@ class JobsController extends Controller
                 'skills' => $job->skill->pluck('name')->toArray(),
                 'address' => $job->address,
                 'last_date' => $job->last_date,
-                'created_at' => $job->created_at->diffForHumans()
+                'created_at' => $job->created_at->diffForHumans(),
             ];
         });
 
@@ -45,7 +42,7 @@ class JobsController extends Controller
                 'last' => $jobs->url($jobs->lastPage()),
                 'prev' => $jobs->previousPageUrl(),
                 'next' => $jobs->nextPageUrl(),
-            ]
+            ],
         ]);
     }
 
@@ -64,13 +61,13 @@ class JobsController extends Controller
             'salary' => 'required|numeric',
             'status' => 'required|integer',
             'featured' => 'required|integer',
-            'description' =>'required|string',
+            'description' => 'required|string',
             'last_date' => 'required|date',
             'address' => 'required|string',
             'skill_experience' => 'required|string',
             'benefits' => 'required|string',
             'job_skills' => 'required|array',  // Validate that job_skills is an array.
-            'job_skills.*.name' => 'required|string' // Validate that each skill has a name.
+            'job_skills.*.name' => 'required|string', // Validate that each skill has a name.
         ]);
 
         if ($validator->fails()) {
@@ -88,7 +85,7 @@ class JobsController extends Controller
         $validatedData['company_id'] = $company ? $company->id : null;
 
         // You may want to handle the case when a company is not found.
-        if (!$company) {
+        if (! $company) {
             return response()->json([
                 'success' => false,
                 'message' => 'No company found for the user.',
@@ -115,24 +112,26 @@ class JobsController extends Controller
             \DB::commit();
 
             return response()->json([
-                'success'   => true,
-                'message'   => "Job and job skills created successfully.",
-                "data" => [
+                'success' => true,
+                'message' => 'Job and job skills created successfully.',
+                'data' => [
                     'job' => $job,
-                    'job_skills' => $job->jobSkills
-                ]
+                    'job_skills' => $job->jobSkills,
+                ],
             ]);
         } catch (\Exception $e) {
             // Rollback the transaction
             \DB::rollBack();
 
             \Log::error($e->getMessage());
+
             return response()->json([
                 'success' => false,
                 'message' => 'Job creation failed.',
             ], 500);
         }
     }
+
     /**
      * Display the specified resource.
      */
@@ -144,17 +143,16 @@ class JobsController extends Controller
         // Tạo một mảng dữ liệu chứa thông tin về công việc và đề xuất công việc
         $responseData = [
             'job' => $job,
-            'job_recommendation' => $jobRecommendation
+            'job_recommendation' => $jobRecommendation,
         ];
 
         // Trả về dữ liệu dưới dạng JSON
         return response()->json([
             'success' => true,
             'message' => 'success',
-            'data' => $responseData
+            'data' => $responseData,
         ]);
     }
-
 
     /**
      * Update the specified resource in storage.
@@ -181,14 +179,14 @@ class JobsController extends Controller
             ]);
 
             // If 'job_skills' are provided in the request, update job skills accordingly
-// If 'job_skills' are provided in the request, update job skills accordingly
+            // If 'job_skills' are provided in the request, update job skills accordingly
             if ($request->has('job_skills')) {
                 $jobSkillsData = $request->input('job_skills');
                 $existingSkills = $job->jobSkills()->pluck('name')->toArray();
 
                 // Delete job skills that are not in the updated list
                 foreach ($existingSkills as $existingSkill) {
-                    if (!in_array($existingSkill, array_column($jobSkillsData, 'name'))) {
+                    if (! in_array($existingSkill, array_column($jobSkillsData, 'name'))) {
                         $job->jobSkills()->where('name', $existingSkill)->delete();
                     }
                 }
@@ -203,18 +201,19 @@ class JobsController extends Controller
             \DB::commit();
 
             return response()->json([
-                'success'   => true,
-                'message'   => "Job and job skills updated successfully.",
-                "data" => [
+                'success' => true,
+                'message' => 'Job and job skills updated successfully.',
+                'data' => [
                     'job' => $job,
-                    'job_skills' => $job->jobSkills
-                ]
+                    'job_skills' => $job->jobSkills,
+                ],
             ]);
         } catch (\Exception $e) {
             // Rollback the transaction
             \DB::rollBack();
 
             \Log::error($e->getMessage());
+
             return response()->json([
                 'success' => false,
                 'message' => 'Job update failed.',
@@ -228,6 +227,7 @@ class JobsController extends Controller
     public function destroy(Job $job)
     {
         $job->delete();
+
         return response()->json([
             'success' => true,
             'message' => 'Job deleted successfully',
@@ -249,6 +249,7 @@ class JobsController extends Controller
 
             // Kiểm tra xem công việc khác có chứa ít nhất một kỹ năng của công việc hiện tại không
             $hasSkill = count(array_intersect($currentJobSkills, $otherJobSkills)) > 0;
+
             return $hasSkill;
         });
 
@@ -258,12 +259,12 @@ class JobsController extends Controller
     public function apply(Request $request, $id)
     {
         $job = Job::find($id);
-        if (!$job) {
+        if (! $job) {
             return response()->json(['message' => 'Công việc không tồn tại.'], 404);
         }
 
         $user = Auth::guard('sanctum')->user();
-        if (!$user) {
+        if (! $user) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
 
@@ -274,7 +275,7 @@ class JobsController extends Controller
         // Process the CV file
         if ($request->hasFile('cv')) {
             $cv = $request->file('cv');
-            $cvFileName = time() . '_' . $cv->getClientOriginalName();
+            $cvFileName = time().'_'.$cv->getClientOriginalName();
             $cv->storeAs('cv', $cvFileName); // Store the CV file in storage/cv directory
         } else {
             $cvFileName = null;
@@ -287,15 +288,17 @@ class JobsController extends Controller
 
         return response()->json(['message' => 'Ứng tuyển công việc thành công.'], 200);
     }
-    public function destroyApplication($id) {
+
+    public function destroyApplication($id)
+    {
         $job = Job::find($id);
-        if (!$job) {
+        if (! $job) {
             return response()->json(['message' => 'Công việc không tồn tại.'], 404);
         }
 
         $user = Auth::guard('sanctum')->user();
 
-        if (!$user) {
+        if (! $user) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
 
@@ -307,29 +310,29 @@ class JobsController extends Controller
     public function applicant()
     {
         $user = Auth::guard('sanctum')->user();
-        if (!$user) {
+        if (! $user) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
 
         $appliedJobs = $user->jobs()->withPivot('status')->get();
+
         return response()->json($appliedJobs, 200);
     }
-
 
     public function processApplication(Request $request, $jobId, $userId)
     {
         $job = Job::find($jobId);
-        if (!$job) {
+        if (! $job) {
             return response()->json(['message' => 'Công việc không tồn tại.'], 404);
         }
 
         $user = User::find($userId);
-        if (!$user) {
+        if (! $user) {
             return response()->json(['message' => 'Người dùng không tồn tại.'], 404);
         }
 
         $status = $request->input('status');
-        if (!in_array($status, ['approved', 'rejected'])) {
+        if (! in_array($status, ['approved', 'rejected'])) {
             return response()->json(['message' => 'Trạng thái không hợp lệ.'], 400);
         }
 
@@ -350,7 +353,7 @@ class JobsController extends Controller
     {
 
         $user = Auth::id();
-        if (!$user) {
+        if (! $user) {
             return response()->json(['message' => 'Người dùng không tồn tại.'], 404);
         }
 
@@ -362,4 +365,49 @@ class JobsController extends Controller
         return response()->json(['user' => $user, 'applied_jobs' => $appliedJobs], 200);
     }
 
+    public function search(Request $request)
+    {
+        // Get the search query from the request
+        $searchQuery = $request->input('query', '');
+
+        // If the search query is empty, return all jobs
+        if (empty($searchQuery)) {
+            return $this->index();
+        }
+
+        // Search for jobs where the title or description contains the search query
+        // You can adjust the fields you wish to search in
+        $jobs = Job::with('jobtype', 'skill', 'Company')
+            ->where('title', 'like', "%{$searchQuery}%")
+            ->orWhere('description', 'like', "%{$searchQuery}%")
+            ->paginate(5);
+
+        // Transform the jobs as done in the index method or any other preferred format
+        $jobsData = $jobs->map(function ($job) {
+            return [
+                'id' => $job->id,
+                'title' => $job->title,
+                'company' => $job->company ? $job->company->name : null,
+                'salary' => $job->salary,
+                'job_type' => $job->jobtype ? $job->jobtype->pluck('name')->toArray() : null,
+                'skills' => $job->skill->pluck('name')->toArray(),
+                'address' => $job->address,
+                'last_date' => $job->last_date,
+                'created_at' => $job->created_at->diffForHumans(),
+            ];
+        });
+
+        // Return the search results
+        return response()->json([
+            'success' => true,
+            'message' => 'Search results',
+            'data' => $jobsData,
+            'links' => [
+                'first' => $jobs->url(1),
+                'last' => $jobs->url($jobs->lastPage()),
+                'prev' => $jobs->previousPageUrl(),
+                'next' => $jobs->nextPageUrl(),
+            ],
+        ]);
+    }
 }

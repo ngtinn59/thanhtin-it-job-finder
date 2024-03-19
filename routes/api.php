@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Api\Admin\Company_typesController;
 use App\Http\Controllers\Api\Admin\CompanysizesController;
 use App\Http\Controllers\Api\Admin\CompanytypesController;
 use App\Http\Controllers\Api\Admin\CountriesController;
@@ -9,7 +8,6 @@ use App\Http\Controllers\Api\Admin\LocationsController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\Companies\CompaniesController;
 use App\Http\Controllers\Api\Companies\CompanyLocationsController;
-use App\Http\Controllers\Api\Companies\Job_skillsController;
 use App\Http\Controllers\Api\Companies\JobsController;
 use App\Http\Controllers\Api\Employer\EmployerRegisterController;
 use App\Http\Controllers\Api\Job\JobApplicationController;
@@ -25,7 +23,6 @@ use App\Http\Controllers\Api\Resume\ProjectsController;
 use App\Http\Controllers\Api\Resume\skillsController;
 use Illuminate\Support\Facades\Route;
 
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -39,14 +36,16 @@ use Illuminate\Support\Facades\Route;
 
 // Jobs
 Route::resource('/', JobsController::class)->only([
-    'index', 'show'
+    'index', 'show',
 ]);
+
+Route::get('/jobs/search', [JobsController::class, 'search']);
 
 Route::post('employer/register', [EmployerRegisterController::class, 'employerRegister']);
 Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [AuthController::class, 'register']);
 
-Route::middleware('auth:sanctum')->group( function () {
+Route::middleware('auth:sanctum')->group(function () {
     Route::resource('profile', profilesController::class);
     Route::resource('profiles/educations', EducationController::class);
     Route::resource('profiles/skills', skillsController::class);
@@ -57,11 +56,9 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::resource('profiles/getResume', GetResumeController::class);
     Route::resource('profiles/experiences', ExperiencesController::class);
 
-
     //Company
     Route::resource('companies', CompaniesController::class);
     Route::resource('companies/location', CompanyLocationsController::class);
-
 
     //Apply
 
