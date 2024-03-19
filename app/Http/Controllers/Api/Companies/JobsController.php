@@ -410,4 +410,48 @@ class JobsController extends Controller
             ],
         ]);
     }
+
+    /**
+     * Get list of saved jobs
+     */
+    public function savedJobs(Request $request)
+    {
+        $user = $request->user();
+        $savedJobs = $user->favorites;
+
+        return response()->json(['saved_jobs' => $savedJobs], 200);
+    }
+
+    /**
+     * Get list of applied jobs
+     */
+    public function appliedJobs(Request $request)
+    {
+        $user = $request->user();
+        $appliedJobs = $user->jobs;
+    }
+
+    /**
+     * Save Job in favorite table
+     */
+    public function saveJob(Request $request, $id)
+    {
+        $job = Job::findOrFail($id);
+        $user = $request->user();
+        $user->favorites()->syncWithoutDetaching([$job->id]);
+
+        return response()->json(['message' => 'Job saved to favorites'], 200);
+    }
+
+    /**
+     * Unsave Job from favorite table
+     */
+    public function unsaveJob(Request $request, $id)
+    {
+        $job = Job::findOrFail($id);
+        $user = $request->user();
+        $user->favorites()->detach($job->id);
+
+        return response()->json(['message' => 'Job removed from favorites'], 200);
+    }
 }

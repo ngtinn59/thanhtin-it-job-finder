@@ -68,6 +68,12 @@ Route::middleware('auth:sanctum')->group(function () {
     //Jobs
     Route::resource('job', JobsController::class);
 
+
+    //favorites Job
+    Route::post('/favorites/{id}/save', [JobsController::class, 'saveJob']);
+    Route::post('/favorites/{id}/unsave', [JobsController::class, 'unsaveJob']);
+    Route::get('/favorites/saved-jobs', [JobsController::class, 'savedJobs']);
+
     //JobAdmin
 
     Route::get('/applications', [JobApplicationController::class, 'index']);
