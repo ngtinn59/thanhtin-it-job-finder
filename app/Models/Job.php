@@ -27,6 +27,10 @@ class Job extends Model
     {
         return $this->hasMany(Jobtype::class,'id','id');
     }
+    public function city()  : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(City::class,'id','id');
+    }
 
 //    public function checkSaved(){
 //        return DB::table('favorites')->where('user_id', auth()->user()->id)->where('job_id', $this->id)->exists();

@@ -316,8 +316,33 @@ class JobsController extends Controller
 
         $appliedJobs = $user->jobs()->withPivot('status')->get();
 
-        return response()->json($appliedJobs, 200);
+        $formattedJobs = $appliedJobs->map(function ($job) {
+            $company = $job->company()->first(); // Lấy thông tin của công ty
+            $jobType = $job->jobType()->first(); // Lấy thông tin của loại công việc
+            $city = $job->city()->first(); // Lấy thông tin của thành phố
+
+            return [
+                'id' => $job->id,
+                'company' => $company ? $company->name : null, // Kiểm tra xem công ty có tồn tại không trước khi truy cập trường name
+                'job_type' => $jobType ? $jobType->name : null, // Kiểm tra xem loại công việc có tồn tại không trước khi truy cập trường name
+                'city' => $city ? $city->name : null, // Kiểm tra xem thành phố có tồn tại không trước khi truy cập trường name
+                'title' => $job->title,
+                'salary' => $job->salary,
+                'status' => $job->pivot->status,
+                'featured' => $job->featured,
+                'address' => $job->address,
+                'description' => $job->description,
+                'skill_experience' => $job->skill_experience,
+                'benefits' => $job->benefits,
+                'last_date' => $job->last_date,
+                'created_at' => $job->created_at,
+                'updated_at' => $job->updated_at,
+            ];
+        });
+
+        return response()->json($formattedJobs, 200);
     }
+
 
     public function processApplication(Request $request, $jobId, $userId)
     {
@@ -419,7 +444,21 @@ class JobsController extends Controller
         $user = $request->user();
         $savedJobs = $user->favorites;
 
-        return response()->json(['saved_jobs' => $savedJobs], 200);
+        $savedJobsData = $savedJobs->map(function ($job) {
+            return [
+                'id' => $job->id,
+                'title' => $job->title,
+                'company' => $job->company ? $job->company->name : null,
+                'salary' => $job->salary,
+                'job_type' => $job->jobtype ? $job->jobtype->pluck('name')->toArray() : null,
+                'skills' => $job->skill->pluck('name')->toArray(),
+                'address' => $job->address,
+                'last_date' => $job->last_date,
+                'created_at' => $job->created_at->diffForHumans(),
+            ];
+        });
+
+        return response()->json(['saved_jobs' => $savedJobsData], 200);
     }
 
     /**
@@ -438,10 +477,17 @@ class JobsController extends Controller
     {
         $job = Job::findOrFail($id);
         $user = $request->user();
-        $user->favorites()->syncWithoutDetaching([$job->id]);
 
-        return response()->json(['message' => 'Job saved to favorites'], 200);
+        // Kiểm tra xem công việc đã được thêm vào danh sách yêu thích của người dùng chưa
+        if ($user->favorites()->where('job_id', $job->id)->exists()) {
+            return response()->json(['message' => 'Job is already saved to favorites'], 200);
+        } else {
+            // Nếu công việc chưa được thêm vào danh sách yêu thích, thực hiện thêm mới
+            $user->favorites()->syncWithoutDetaching([$job->id]);
+            return response()->json(['message' => 'Job saved to favorites'], 200);
+        }
     }
+
 
     /**
      * Unsave Job from favorite table

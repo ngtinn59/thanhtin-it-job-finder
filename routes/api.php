@@ -74,10 +74,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/favorites/{id}/unsave', [JobsController::class, 'unsaveJob']);
     Route::get('/favorites/saved-jobs', [JobsController::class, 'savedJobs']);
 
-    //JobAdmin
+    Route::get('/appliedJobs', [JobsController::class, 'appliedJobs']);
 
+
+    //JobAdmin
     Route::get('/applications', [JobApplicationController::class, 'index']);
     Route::post('/processApplication/{jobId}/{userId}', [JobApplicationController::class, 'processApplication']);
+
+
     //Admin
     Route::resource('Admin/jobTypes', Job_typesController::class);
     Route::resource('Admin/experienceLevel', experience_levelController::class);

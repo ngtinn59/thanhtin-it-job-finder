@@ -79,9 +79,13 @@ class User extends Authenticatable
     public function job(){
         return $this->hasMany(Job::class,'users_id','id');
     }
+//    public function jobs()
+//    {
+//        return $this->belongsToMany(Job::class)->withPivot('status');
+//    }
+
     public function jobs()
     {
-        return $this->belongsToMany(Job::class)->withPivot('status');
+        return $this->belongsToMany(Job::class)->withPivot('status')->select('jobs.*', 'job_user.status as pivot_status');
     }
-
 }
