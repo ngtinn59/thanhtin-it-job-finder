@@ -13,7 +13,7 @@
     <li>Công ty: {{ $companyName }}</li>
     <li>Địa chỉ: {{ $address }}</li>
     <li>Mức lương: {{ $salary }}</li>
-    <li>Loại công việc: {{ $jobtype }}</li>
+{{--    <li>Loại công việc: {{ $jobtype }}</li>--}}
 </ul>
 <p>Chúng tôi sẽ liên hệ với bạn sớm.</p>
 </body>

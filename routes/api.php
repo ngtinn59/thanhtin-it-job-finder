@@ -80,6 +80,7 @@ Route::middleware('auth:sanctum')->group(function () {
     //JobAdmin
     Route::get('/applications', [JobApplicationController::class, 'index']);
     Route::post('/processApplication/{jobId}/{userId}', [JobApplicationController::class, 'processApplication']);
+    Route::get('/getStatistics', [JobApplicationController::class, 'getStatistics']);
 
 
     //Admin

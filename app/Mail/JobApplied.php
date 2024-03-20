@@ -30,7 +30,7 @@ class JobApplied extends Mailable
     {
         $job = $this->job;
         $company = $job->company;
-        $jobtype = $job->jobtype->first()->name;
+//        $jobtype = $job->jobtype->first()->name;
         return $this->from('ngtin590@gmail.com', $company->name)
             ->subject('Xác nhận tuyển dụng')
             ->view('emails.job_applied')
@@ -39,7 +39,7 @@ class JobApplied extends Mailable
                 'companyName' => $company->name,
                 'address' => $job->address,
                 'salary' => $job->salary,
-                'jobtype' => $jobtype,
+//                'jobtype' => $jobtype,
                 'userName' => Auth::user()->name,
             ]);
     }

@@ -9,6 +9,7 @@ use App\Models\job_user;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class JobApplicationController extends Controller
 {
@@ -103,17 +104,49 @@ class JobApplicationController extends Controller
         return response()->json(['message' => 'Xử lí đơn ứng tuyển thành công.'], 200);
     }
 
-    public function viewApplicants($jobId)
+    public function getStatistics()
     {
-        $job = Job::find($jobId);
-        if (!$job) {
-            return response()->json(['message' => 'Công việc không tồn tại.'], 404);
+        $user = Auth::guard('sanctum')->user();
+        if (! $user) {
+            return response()->json(['message' => 'Unauthorized'], 401);
         }
 
-        $applicants = $job->users()->withPivot('status')->get();
+        // Load các mối quan hệ của jobs bao gồm jobType
+        $user->load(['jobs.jobType', 'jobs.city', 'jobs' => function ($query) {
+            $query->withPivot('status');
+        }]);
 
-        // You can customize the response format as needed
-        return response()->json(['job' => $job, 'applicants' => $applicants], 200);
+        // Tính số lượng công việc đã ứng tuyển
+        $appliedJobCount = $user->jobs->count();
+
+
+        $jobTypeStatistics = $user->jobs->groupBy(function ($job) {
+            $jobType = $job->jobType()->first(); // Lấy đối tượng jobType thay vì collection
+            return optional($jobType)->name ?? 'Unknown';
+        })->map(function ($jobs) {
+            return $jobs->count();
+        })->toArray();
+
+
+
+        // Tính số lượng công việc đã ứng tuyển theo thành phố
+        // Tính số lượng công việc đã ứng tuyển theo thành phố
+        $cityStatistics = $user->jobs->groupBy(function ($job) {
+            $city = $job->city()->first(); // Lấy đối tượng city thay vì collection
+            return optional($city)->name ?? 'Unknown';
+        })->map(function ($jobs) {
+            return $jobs->count();
+        })->toArray();
+
+
+        // Tạo đối tượng thống kê
+        $statistics = [
+            'appliedJobCount' => $appliedJobCount,
+            'jobTypeStatistics' => $jobTypeStatistics,
+            'cityStatistics' => $cityStatistics,
+        ];
+
+        return response()->json($statistics, 200);
     }
 
 }

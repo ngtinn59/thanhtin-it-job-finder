@@ -86,6 +86,6 @@ class User extends Authenticatable
 
     public function jobs()
     {
-        return $this->belongsToMany(Job::class)->withPivot('status')->select('jobs.*', 'job_user.status as pivot_status');
+        return $this->belongsToMany(Job::class)->withPivot('status');
     }
 }
