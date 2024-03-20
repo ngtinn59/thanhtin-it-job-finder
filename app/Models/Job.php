@@ -25,7 +25,7 @@ class Job extends Model
 
     public function jobtype()
     {
-        return $this->hasMany(job_type::class,'jobtype_id','id');
+        return $this->hasMany(Jobtype::class,'jobtype_id','id');
     }
     public function city()  : \Illuminate\Database\Eloquent\Relations\HasMany
     {
