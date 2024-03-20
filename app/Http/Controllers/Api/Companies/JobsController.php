@@ -52,7 +52,7 @@ class JobsController extends Controller
     public function store(Request $request)
     {
         $user = auth()->user();
-        $company = $user->companies->first(); // Assuming you want the first company of the user.
+        $company = $user->companies->id;
 
         $validator = Validator::make($request->all(), [
             'jobtype_id' => 'required',
@@ -82,7 +82,7 @@ class JobsController extends Controller
 
         // Add users_id and company_id to the validated data array.
         $validatedData['users_id'] = $user->id;
-        $validatedData['company_id'] = $company ? $company->id : null;
+        $validatedData['company_id'] = $company ;
 
         // You may want to handle the case when a company is not found.
         if (! $company) {

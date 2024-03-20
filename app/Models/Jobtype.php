@@ -11,6 +11,7 @@ class Jobtype extends Model
 
     protected $table = 'job_types';
     protected $primaryKey = 'id';
+    protected $guarded = [];
 
 
 }

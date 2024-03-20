@@ -18,14 +18,27 @@ class JobApplicationController extends Controller
      */
     public function index()
     {
-        // Tải sẵn thông tin công ty và người ứng tuyển
-        $jobs = Job::with('company', 'applicants')->get();
+        $user = Auth::user(); // Get the currently authenticated user
+
+        // Check if the user has a company associated with them
+        if (!$user->companies) {
+            return response()->json(['message' => 'Không có thông tin công ty.'], 403);
+        }
+
+        // Get the company ID of the authenticated user
+        $companyId = $user->companies->id;
+
+        // Load only jobs that belong to the company of the authenticated user,
+
+        $jobs = Job::with(['applicants' => function ($query) {
+            $query->withPivot('status', 'cv'); // Include pivot table fields
+        }])->where('company_id', 1) // Assuming the jobs table has a 'company_id' column
+        ->get();
 
         return response()->json([
             'jobs' => $jobs,
         ]);
     }
-
     /**
      * Show the form for creating a new resource.
      */
@@ -104,49 +117,7 @@ class JobApplicationController extends Controller
         return response()->json(['message' => 'Xử lí đơn ứng tuyển thành công.'], 200);
     }
 
-    public function getStatistics()
-    {
-        $user = Auth::guard('sanctum')->user();
-        if (! $user) {
-            return response()->json(['message' => 'Unauthorized'], 401);
-        }
-
-        // Load các mối quan hệ của jobs bao gồm jobType
-        $user->load(['jobs.jobType', 'jobs.city', 'jobs' => function ($query) {
-            $query->withPivot('status');
-        }]);
-
-        // Tính số lượng công việc đã ứng tuyển
-        $appliedJobCount = $user->jobs->count();
-
-
-        $jobTypeStatistics = $user->jobs->groupBy(function ($job) {
-            $jobType = $job->jobType()->first(); // Lấy đối tượng jobType thay vì collection
-            return optional($jobType)->name ?? 'Unknown';
-        })->map(function ($jobs) {
-            return $jobs->count();
-        })->toArray();
-
-
-
-        // Tính số lượng công việc đã ứng tuyển theo thành phố
-        // Tính số lượng công việc đã ứng tuyển theo thành phố
-        $cityStatistics = $user->jobs->groupBy(function ($job) {
-            $city = $job->city()->first(); // Lấy đối tượng city thay vì collection
-            return optional($city)->name ?? 'Unknown';
-        })->map(function ($jobs) {
-            return $jobs->count();
-        })->toArray();
-
-
-        // Tạo đối tượng thống kê
-        $statistics = [
-            'appliedJobCount' => $appliedJobCount,
-            'jobTypeStatistics' => $jobTypeStatistics,
-            'cityStatistics' => $cityStatistics,
-        ];
-
-        return response()->json($statistics, 200);
-    }
 
 }
+
+

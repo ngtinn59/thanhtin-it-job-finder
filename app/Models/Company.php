@@ -49,5 +49,13 @@ class Company extends Model
     {
         return $this->hasOne(City::class, 'id', 'city_id');
     }
+    // In your Company model
+    public function jobs()  : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Job::class,'company_id','id');
+    }
+
+// Similarly, update other method names as necessary.
+
 
 }

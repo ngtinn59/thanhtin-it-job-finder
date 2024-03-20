@@ -23,13 +23,13 @@ class Job extends Model
         return $this->hasMany(Jobskill::class,'job_id','id');
     }
 
-    public function jobtype()  : \Illuminate\Database\Eloquent\Relations\HasMany
+    public function jobtype()
     {
-        return $this->hasMany(Jobtype::class,'id','id');
+        return $this->hasMany(job_type::class,'jobtype_id','id');
     }
     public function city()  : \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(City::class,'id','id');
+        return $this->hasMany(City::class,'city_id','id');
     }
 
 //    public function checkSaved(){
@@ -59,4 +59,8 @@ class Job extends Model
         // Sử dụng tên mô hình User và tên bảng trung gian là 'job_user'
         return $this->belongsToMany(User::class, 'job_user');
     }
+
+    // In your Job model
+
+// Update other relationships if necessary.
 }
