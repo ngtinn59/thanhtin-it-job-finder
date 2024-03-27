@@ -23,6 +23,7 @@ class EducationController extends Controller
 
         $educationsData = $educations->map(function ($education) {
             return [
+                'id' => $education->id,
                 'degree' => $education->degree,
                 'institution' => $education->institution,
                 'start_date' => $education->start_date,
@@ -105,6 +106,7 @@ class EducationController extends Controller
             'success' => true,
             'message' => 'success',
             'data' => [
+                'id' => $education->id,
                 'degree' => $education->degree,
                 'institution' => $education->institution,
                 'start_date' => $education->start_date,
